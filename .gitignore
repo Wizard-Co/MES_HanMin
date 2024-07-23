@@ -15,12 +15,21 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
 bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+
+# Custom ignores
+
+!*.dll
+
+# or
+
+!My.specific.dll
+
+# rest of .gitignore
+
 
 # Visual Studio 2015 cache/options directory
 .vs/
