@@ -74,6 +74,7 @@ namespace WizMes_HanMin
             this.cboWork.ItemsSource = cbWork;
             this.cboWork.DisplayMemberPath = "code_name";
             this.cboWork.SelectedValuePath = "code_id";
+            this.cboWork.SelectedIndex = 0;
         }
 
         #region 라벨 체크박스 이벤트 관련
@@ -169,6 +170,8 @@ namespace WizMes_HanMin
         //수주상태
         private void cboOrderStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            dgdSum.Items.Clear();
+
             if (cboOrderStatus.SelectedIndex == 0)
             {
                 btnFinal.IsEnabled = false;
@@ -298,6 +301,7 @@ namespace WizMes_HanMin
             }
 
             dgdMain.Items.Clear();
+            dgdSum.Items.Clear();
             FillGrid();
         }
 
@@ -654,7 +658,7 @@ namespace WizMes_HanMin
                     //dataGrid.Items.Clear();
                     if (dt.Rows.Count == 0)
                     {
-                        MessageBox.Show("조회된 데이터가 없습니다.");
+                        MessageBox.Show("조회된 데이터가 없습니다.");             
                     }
                     else
                     {

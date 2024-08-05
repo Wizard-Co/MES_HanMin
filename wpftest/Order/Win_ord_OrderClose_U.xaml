@@ -122,7 +122,7 @@
                 </Button>
 
             </Grid>
-            <Grid Grid.Row="1" Grid.Column="2">
+            <Grid Grid.Row="2" Grid.Column="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="90*" />
@@ -146,7 +146,7 @@
                     <Image Source="{DynamicResource btiPlusFind}" Style="{DynamicResource imgPlusFind}"/>
                 </Button>
             </Grid>
-            <Grid Grid.Row="2" Grid.Column="2">
+            <Grid Grid.Row="1" Grid.Column="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="90*" />
@@ -159,7 +159,7 @@
                                       Unchecked="chkModel_Unchecked" />
                         </Viewbox>
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                            <TextBlock Text=" 차   종" Style="{DynamicResource TextBlockInViewBoxSearch}" />
+                            <TextBlock Text=" 모델명" Style="{DynamicResource TextBlockInViewBoxSearch}" />
                         </Viewbox>
                         
                     </StackPanel>
@@ -211,7 +211,7 @@
                                       Unchecked="chkWork_Unchecked" />
                         </Viewbox>
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                            <TextBlock Text="가공구분" Style="{DynamicResource TextBlockInViewBoxSearch}" />
+                            <TextBlock Text=" 가공구분" Style="{DynamicResource TextBlockInViewBoxSearch}" />
                         </Viewbox>
                         
                         
@@ -322,7 +322,7 @@
                     <DataGridTextColumn x:Name="dgdtxtCustom" Header="거래처" Width="auto" Binding="{Binding KCustom}" MinWidth="100"/>
                     <DataGridTextColumn x:Name="dgdtxtArticleID" Header="품번" Width="auto" Binding="{Binding BuyerArticleNo}" MinWidth="100"/>
                     <DataGridTextColumn x:Name="dgdtxtArticle" Header="품명" Width="auto" Binding="{Binding Article}" MinWidth="100"/>
-                    <DataGridTextColumn x:Name="dgdtxtModel" Header="차종" Width="auto" Binding="{Binding BuyerModel}" MinWidth="100"/>
+                    <DataGridTextColumn x:Name="dgdtxtModel" Header="모델명" Width="auto" Binding="{Binding BuyerModel}" MinWidth="100"/>
                     <DataGridTextColumn x:Name="dgdtxtDvlyDate" Header="납기일자" Width="auto" Binding="{Binding DvlyDateEdit}" MinWidth="100"
                                         ElementStyle="{StaticResource  DataGridCellCenter}" />
                     <DataGridTextColumn x:Name="dgdtxtWork" Header="가공구분" Width="auto" Binding="{Binding WorkName}" MinWidth="100"

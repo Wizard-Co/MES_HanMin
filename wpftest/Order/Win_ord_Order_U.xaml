@@ -118,7 +118,7 @@
                                           Unchecked="chkBuyerModelIDSrh_Unchecked" VerticalAlignment="Center"/>
                             </Viewbox>
                             <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                <TextBlock Text="차   종" Style="{DynamicResource TextBlockInViewBoxSearch}" />
+                                <TextBlock Text="모   델" Style="{DynamicResource TextBlockInViewBoxSearch}" />
                             </Viewbox>
                             
                         </StackPanel>
@@ -638,7 +638,7 @@
                                     Style="{DynamicResource LabelInputArea}">
                                 <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
 
-                                    <TextBlock Text="차   종" Style="{DynamicResource TextBlockInViewBoxInput}" />
+                                    <TextBlock Text="모   델" Style="{DynamicResource TextBlockInViewBoxInput}" />
                                 </Viewbox>
                             </Label>
                             <TextBox x:Name="txtModel" Grid.Row="11" Grid.Column="1"   Tag="{Binding BuyerModelID}"

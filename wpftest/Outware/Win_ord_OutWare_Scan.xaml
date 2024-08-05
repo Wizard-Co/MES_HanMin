@@ -346,7 +346,7 @@
                     <DataGridTextColumn Header="품번" Binding="{Binding BuyerArticleNo}" />
                     <DataGridTextColumn Header="출고처" Binding="{Binding OutCustom}" />
                     <DataGridTextColumn Header="출고구분" Binding="{Binding OutClssname}" ElementStyle="{StaticResource DataGridCellCenter}"/>
-                    <DataGridTextColumn Header="출고박스" Binding="{Binding OutRoll}" ElementStyle="{StaticResource DataGridCellRight}"/>
+                    <DataGridTextColumn Header="출고박스" Binding="{Binding OutRoll}" ElementStyle="{StaticResource DataGridCellRight}" Visibility="Hidden"/>
                     <DataGridTextColumn Header="출고량" Binding="{Binding OutQty}" ElementStyle="{StaticResource DataGridCellRight}"/>
                     <DataGridTextColumn Header="수주거래처" Binding="{Binding KCustom}" />
                     <DataGridTextColumn Header="차종" Binding="{Binding BuyerModel}" ElementStyle="{StaticResource DataGridCellCenter}"/>
@@ -368,17 +368,47 @@
 
             <!-- 스플릿터 -->
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-
+   
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="210*" />
                     <RowDefinition Height="80*" />
                     <RowDefinition Height="242*" />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="80*"/>
+                </Grid.ColumnDefinitions>
 
-                <GroupBox x:Name="grbOutwareDetailBox" Grid.Row="0" Header="출고 내역" >
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <ToggleButton x:Name="tgnMoveByID" Grid.Row="0"  Margin="1" Click="tgnMoveByID_Click" IsChecked="False" IsHitTestVisible="False">
+                        <Viewbox Margin="5">
+                            <StackPanel>
+                                <TextBlock Text="ID" HorizontalAlignment="Center" />
+                                <TextBlock Text="기준" HorizontalAlignment="Center" />
+                                <TextBlock Text="출고" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Viewbox>
+                    </ToggleButton>
+                    <ToggleButton x:Name="tgnMoveByQty" Grid.Row="1" Grid.RowSpan="1" Margin="1" Click="tgnMoveByQty_Click" IsChecked="True" IsHitTestVisible="False" >
+                        <Viewbox Margin="5">
+                            <StackPanel>
+                                <TextBlock Text="수량" HorizontalAlignment="Center" />
+                                <TextBlock Text="기준" HorizontalAlignment="Center" />
+                                <TextBlock Text="출고" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Viewbox>
+                    </ToggleButton>
+                </Grid>
+
+                <GroupBox Grid.Column="1" x:Name="grbOutwareDetailBox" Grid.Row="0" Header="출고 내역" >
                     <Grid>
-                        <Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>                     
                             <ColumnDefinition Width="82*" />
                             <ColumnDefinition Width="133*" />
                             <ColumnDefinition Width="20*" />
@@ -397,190 +427,334 @@
                             <RowDefinition Height="10*" />
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Column="0" Grid.Row="0" 
+                        <!--<Grid Grid.Column="0" Grid.RowSpan="4">                        
+                                <ToggleButton x:Name="tgnMoveByID" Margin="1" IsEnabled="True" Click="tgnMoveByID_Click" IsHitTestVisible="False">
+                                    <Viewbox Margin="5">
+                                        <StackPanel>
+                                            <TextBlock Text="ID" HorizontalAlignment="Center" />
+                                            <TextBlock Text="기준" HorizontalAlignment="Center" />
+                                            <TextBlock Text="출고" HorizontalAlignment="Center" />
+                                        </StackPanel>
+                                    </Viewbox>
+                                </ToggleButton>
+                          
+                         </Grid>
+
+                        <Grid Grid.Row="4" Grid.RowSpan="4">                    
+                                <ToggleButton x:Name="tgnMoveByQty" Grid.Row="1" IsEnabled="True" IsChecked="True" Grid.RowSpan="1" Margin="1" Click="tgnMoveByQty_Click"  IsHitTestVisible="False" >
+                                    <Viewbox Margin="5">
+                                        <StackPanel>
+                                            <TextBlock Text="수량" HorizontalAlignment="Center" />
+                                            <TextBlock Text="기준" HorizontalAlignment="Center" />
+                                            <TextBlock Text="출고" HorizontalAlignment="Center" />
+                                        </StackPanel>
+                                    </Viewbox>
+                                </ToggleButton>                  
+                        </Grid>-->
+
+
+                    <!--관리번호-->
+                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" 
                               Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                    <TextBlock Text="관리번호"  Style="{DynamicResource TextBlockInViewBoxInput}" />
-                                </Viewbox>
-                            </StackPanel>
-                            
-                        </Label>
-                        <TextBox x:Name="txtOrderID"  Grid.Column="1" Grid.Row="0" Style="{DynamicResource TextBoxInputArea}"
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="관리번호"  Style="{DynamicResource TextBlockInViewBoxInput}" />
+                                    </Viewbox>
+                                </StackPanel>
+
+                            </Label>
+                            <TextBox x:Name="txtOrderID"  Grid.Column="1" Grid.Row="0" Style="{DynamicResource TextBoxInputArea}"
                                  Text="{Binding Path=OrderID}" KeyDown="txtOrderID_KeyDown" TabIndex="12" PreviewTextInput="txtOrderID_PreviewTextInput" />
-                        <Button x:Name="btnOrderID"  Grid.Column="2" Grid.Row="0" Click="btnOrderID_Click">
-                            <Image Source="{DynamicResource btiPlusFind}" Style="{DynamicResource imgPlusFind}" Margin="1"/>
-                        </Button>
+                            <Button x:Name="btnOrderID"  Grid.Column="2" Grid.Row="0" Click="btnOrderID_Click">
+                                <Image Source="{DynamicResource btiPlusFind}" Style="{DynamicResource imgPlusFind}" Margin="1"/>
+                            </Button>
+                        </Grid>
 
-                        <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                 <TextBlock Text="출고구분"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                        <!--출고구분-->
+                        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
 
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <ComboBox x:Name="cboOutClss" Grid.Column="1" Grid.Row="1" 
+                            <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="출고구분"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <ComboBox x:Name="cboOutClss" Grid.Column="1" Grid.Row="1" 
                                   SelectedValue="{Binding Path=OutClss}" Background="#fff2d2" Style="{DynamicResource ComboBoxInputString}"
                                   DropDownClosed="cboOutClss_DropDownClosed" TabIndex="13"/>
+                        </Grid>
 
-                        <Label Grid.Column="0" Grid.Row="2" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                  <TextBlock Text="작성일자"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-    
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <DatePicker x:Name="dtpOutDate" Grid.Column="1" Grid.Row="2" Padding="0" Text="{Binding Path=OutDate}" Style="{DynamicResource DatePickerInputArea}"
-                                
-                                    CalendarClosed="DtpOutDate_CalendarClosed"/>
-
-                        <Label Grid.Column="0" Grid.Row="3" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                   <TextBlock Text="박스/수량"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <Grid Grid.Column="1" Grid.Row="3">
+                        <!--작성일자-->
+                        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="2" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="작성일자"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <DatePicker x:Name="dtpOutDate" Grid.Column="1" Grid.Row="2" Padding="0" Text="{Binding Path=OutDate}" 
+                                        Style="{DynamicResource DatePickerInputArea}"                                
+                                    CalendarClosed="DtpOutDate_CalendarClosed"/>
+                        </Grid>
+
+                        <!--박스/수량-->
+                        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="txtOutRoll" Grid.Column="0" Style="{StaticResource TextBoxInput_Number_Right}"
+                            <Label Grid.Column="0" Grid.Row="3" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="박스/수량"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <Grid Grid.Column="1" Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="txtOutRoll" Grid.Column="0" Style="{StaticResource TextBoxInput_Number_Right}"
                                      Text="{Binding Path=OutRoll}"
                                      Background="#fff2d2" TabIndex="14" KeyDown="TxtOutRoll_KeyDown" IsReadOnly="True" PreviewTextInput="txtOutRoll_PreviewTextInput"/>
-                            <TextBox x:Name="txtOutQty" Grid.Column="1" Style="{StaticResource TextBoxInput_Number_Right}"
+                                <TextBox x:Name="txtOutQty" Grid.Column="1" Style="{StaticResource TextBoxInput_Number_Right}"
                                      Text="{Binding Path=OutQty}"
                                      Background="#fff2d2" KeyDown="TxtOutQty_KeyDown" TabIndex="15" IsReadOnly="True" PreviewTextInput="txtOutQty_PreviewTextInput"/>
+                            </Grid>
                         </Grid>
-
-                        <Label Grid.Column="0" Grid.Row="4" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                  <TextBlock Text="수주거래처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <TextBox x:Name="txtKCustom" Grid.Column="1" Grid.Row="4"  Style="{StaticResource TextBoxInputNecessary}"
-                                 Text="{Binding Path=KCustom}" Tag="{Binding Path=CustomID}" KeyDown="TxtKCustom_KeyDown" TabIndex="16" IsReadOnly="True" />
-
-                        <Label Grid.Column="0" Grid.Row="5" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-
-                                    <TextBlock Text="납품거래처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <TextBox x:Name="txtBuyerName" Grid.Column="1" Grid.Row="5" Style="{DynamicResource TextBoxInputArea}"
-                                 Text="{Binding Path=DvlyCustom}" Tag="{Binding Path=DvlyCustomID}" KeyDown="txtBuyerName_KeyDown" TabIndex="17"/>
-                        <Button x:Name="btnBuyerName"  Grid.Column="2" Grid.Row="5" Click="btnBuyerName_Click" >
-                            <Image Source="{DynamicResource btiPlusFind}" Style="{DynamicResource imgPlusFind}" Margin="1"/>
-                        </Button>
-                        <!--Text="{Binding Path=BuyerName}" Tag="{Binding Path=BuyerID}"-->
-                        <!--20210526-->
-
-                        <Label Grid.Column="0" Grid.Row="6" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-
-                                    <TextBlock Text="출 고 처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <TextBox x:Name="txtOutCustom" Grid.Column="1" Grid.Row="6" Style="{DynamicResource TextBoxInputArea}" IsReadOnly="True"
-                                 Text="{Binding Path=OutCustom}" Tag="{Binding Path=OutCustomID}" KeyDown="TxtOutCustom_KeyDown" TabIndex="19" />
-
-                        <Label Grid.Column="3" Grid.Row="0" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-
-                                   <TextBlock Text="품    명"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <Grid Grid.Column="4" Grid.Row="0">
+                        
+                        <!--수주거래처-->
+                        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60*" />
-                                <ColumnDefinition Width="93*" />
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="txtArticleID_InGroupBox" Grid.Column="0" Style="{DynamicResource TextBoxInputArea}"
-                                     Text="{Binding Path=ArticleID}" IsHitTestVisible="False" IsEnabled="False" />
-                            <TextBox x:Name="txtArticle_InGroupBox"  Grid.Column="2" Grid.Row="0" Style="{DynamicResource TextBoxInputArea}"
-                                     IsHitTestVisible="False"
-                                 Text="{Binding Path=Article}" Tag="{Binding Path=ArticleID}" KeyDown="EnterMove_KeyDown" TabIndex="20" IsEnabled="False" />
+                            <Label Grid.Column="0" Grid.Row="4" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="수주거래처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <TextBox x:Name="txtKCustom" Grid.Column="1" Grid.Row="4"  Style="{StaticResource TextBoxInputNecessary}"
+                                 Text="{Binding Path=KCustom}" Tag="{Binding Path=CustomID}" KeyDown="TxtKCustom_KeyDown" TabIndex="16" IsReadOnly="True" />
+                        </Grid>
+                        
+                        <!--납품거래처-->
+                        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="5" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+
+                                        <TextBlock Text="납품거래처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <TextBox x:Name="txtBuyerName" Grid.Column="1" Grid.Row="5" Style="{DynamicResource TextBoxInputArea}"
+                                 Text="{Binding Path=DvlyCustom}" Tag="{Binding Path=DvlyCustomID}" KeyDown="txtBuyerName_KeyDown" TabIndex="17"/>
+                            <Button x:Name="btnBuyerName"  Grid.Column="2" Grid.Row="5" Click="btnBuyerName_Click" >
+                                <Image Source="{DynamicResource btiPlusFind}" Style="{DynamicResource imgPlusFind}" Margin="1"/>
+                            </Button>
+                            <!--Text="{Binding Path=BuyerName}" Tag="{Binding Path=BuyerID}"-->
+                            <!--20210526-->
                         </Grid>
 
-                        <Label Grid.Column="3" Grid.Row="1" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                        <!--출고처-->
+                        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="6" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
 
-                                  <TextBlock Text="품    번"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <TextBox x:Name="txtBuyerArticleNo" Grid.Column="4" Grid.Row="1" Style="{DynamicResource TextBoxInputArea}"
+                                        <TextBlock Text="출 고 처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <TextBox x:Name="txtOutCustom" Grid.Column="1" Grid.Row="6" Style="{DynamicResource TextBoxInputArea}" IsReadOnly="True"
+                                 Text="{Binding Path=OutCustom}" Tag="{Binding Path=OutCustomID}" KeyDown="TxtOutCustom_KeyDown" TabIndex="19" />
+                        </Grid>
+
+                        <!--품명-->
+                        <Grid Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+
+                                       <TextBlock Text="품    명"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <Grid Grid.Column="1" Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60*" />
+                                    <ColumnDefinition Width="93*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="txtArticleID_InGroupBox" Grid.Column="0" Style="{DynamicResource TextBoxInputArea}"
+                                         Text="{Binding Path=ArticleID}" IsHitTestVisible="False" IsEnabled="False" />
+                                <TextBox x:Name="txtArticle_InGroupBox"  Grid.Column="2" Grid.Row="0" Style="{DynamicResource TextBoxInputArea}"
+                                         IsHitTestVisible="False"
+                                     Text="{Binding Path=Article}" Tag="{Binding Path=ArticleID}" KeyDown="EnterMove_KeyDown" TabIndex="20" IsEnabled="False" />
+                            </Grid>
+                        </Grid>
+
+                        <!--품번-->
+                        <Grid Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"  Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+
+                                        <TextBlock Text="품    번"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <TextBox x:Name="txtBuyerArticleNo" Grid.Column="1" Style="{DynamicResource TextBoxInputArea}"
                                  Text="{Binding Path=BuyerArticleNo}" TabIndex="21" IsReadOnly="True" />
+                        </Grid>
 
-                        <Label Grid.Column="3" Grid.Row="2" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                        <!--모델-->
+                        <Grid Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
 
-                                  <TextBlock Text="차    종"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <TextBox x:Name="txtBuyerModel" Grid.Column="4" Grid.Row="2" Style="{DynamicResource TextBoxInputArea}"
+                                        <TextBlock Text="모    델"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <TextBox x:Name="txtBuyerModel" Grid.Column="1" Style="{DynamicResource TextBoxInputArea}"
                                  Text="{Binding Path=BuyerModel}" KeyDown="txtBuyerModel_KeyDown" TabIndex="21"/>
+                        </Grid>
 
-                        <Label Grid.Column="3" Grid.Row="3" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                  <TextBlock Text="출고번호"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <TextBox x:Name="txtOutwareID" Grid.Column="4" Grid.Row="3" Style="{DynamicResource TextBoxInputAutoCreate}" IsReadOnly="True"
+                        <!--출고번호-->
+                        <Grid Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="출고번호"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <TextBox x:Name="txtOutwareID" Grid.Column="1" Style="{DynamicResource TextBoxInputAutoCreate}" IsReadOnly="True"
                                  Text="{Binding Path=OutwareID}"  />
+                        </Grid>
 
-                        <Label Grid.Column="3" Grid.Row="4" Style="{DynamicResource LabelInputArea}">
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                    <TextBlock Text="전 창고"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Label>
-                        <ComboBox x:Name="cboFromLoc" Grid.Column="4" Grid.Row="4" Style="{DynamicResource ComboBoxInputString}"
+                        <!--전창고-->
+                        <Grid Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Style="{DynamicResource LabelInputArea}">
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="전 창고"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Label>
+                            <ComboBox x:Name="cboFromLoc" Grid.Column="1"  Style="{DynamicResource ComboBoxInputString}"
                                   SelectedValue="{Binding Path=FromLocID}" Background="#fff2d2"
                                   DropDownClosed="cboFromLoc_DropDownClosed" TabIndex="22" />
+                        </Grid>
 
-                        <Label Grid.Column="3" Grid.Row="5" Style="{DynamicResource LabelInputArea}" Visibility="Hidden" >
-                            <TextBlock Text="후 창고"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                        </Label>
-                        <ComboBox x:Name="cboToLoc" Grid.Column="4" Grid.Row="5" Padding="0" SelectedValue="{Binding Path=TOLocID}"
+                        <!--후창고-->
+                        <Grid Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"  Style="{DynamicResource LabelInputArea}" Visibility="Hidden" >
+                                <TextBlock Text="후 창고"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                            </Label>
+                            <ComboBox x:Name="cboToLoc" Grid.Column="1" Padding="0" SelectedValue="{Binding Path=TOLocID}"
                                   DropDownClosed="cboToLoc_DropDownClosed" TabIndex="23" Visibility="Hidden" />
+                        </Grid>
+                        
+                        <!--비고-->
+                        <Grid Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="2">                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="82*"/>
+                                <ColumnDefinition Width="133*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10*"/>
+                                <RowDefinition Height="10*"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Column="0"  Style="{DynamicResource LabelInputArea}" >
+                                <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
+                                        <TextBlock Text="비    고"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    </Viewbox>
+                                </StackPanel>
 
-                        <Label Grid.Column="3" Grid.Row="5" Style="{DynamicResource LabelInputArea}" >
-                            <StackPanel Style="{DynamicResource StackPanelInLabel}">
-                                <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                                    <TextBlock Text="비    고"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
-                                </Viewbox>
-                            </StackPanel>
-
-                        </Label>
-                        <TextBox x:Name="txtRemark" Grid.Column="4" Grid.Row="5" Style="{DynamicResource TextBoxInputArea}"
+                            </Label>
+                            <TextBox x:Name="txtRemark" Grid.Column="1" Style="{DynamicResource TextBoxInputArea}"
                                  Text="{Binding Path=Remark}" 
                                  KeyDown="txtRemark_KeyDown" TabIndex="24" Grid.RowSpan="2" TextWrapping="Wrap" AcceptsReturn="True" />
+                        </Grid>
 
-                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Margin="-2" 
+                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Margin="-2" Visibility="Hidden"
                                    Text="※ 출고요청번호 체크시, 전월 1일부터의 출고요청을 조회"/>
 
-                        <Button x:Name="btnAddbox" Grid.Row="9" Grid.Column="4" Click="BtnAddbox_Click" >
+                        <Button x:Name="btnAddbox" Grid.Row="9" Grid.Column="4" Click="BtnAddbox_Click" Visibility="Hidden">
                             <TextBlock   Text="박스선택"></TextBlock>
                         </Button>
                         
@@ -591,46 +765,17 @@
                 </GroupBox>
 
                 <!-- 우측 중간 스캔공간 -->
-                <TextBox x:Name="txtScanData"  Grid.Row="1" FontSize="50"
+                <TextBox x:Name="txtScanData"  Grid.Row="1" Grid.ColumnSpan="2" FontSize="50"
                          BorderBrush="Black" BorderThickness="1" Background="AliceBlue" 
                          KeyDown="txtScanData_KeyDown" TabIndex="26"/>
 
                 <!--서브 데이터그리드-->
-                <DataGrid x:Name="dgdOutwareSub" Grid.Row="2"
+                <DataGrid x:Name="dgdOutwareSub" Grid.Row="2" Grid.ColumnSpan="2"
                           SelectionChanged="dgdOutwareSub_SelectionChanged"
                           KeyDown="dgdOutwareSub_KeyDown"
                           SizeChanged="DataGrid_SizeChange"
                           Style="{DynamicResource DataGridSet1}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="바코드번호" Width="auto" MinWidth="150" Binding="{Binding Path= LabelID}" ElementStyle="{StaticResource DataGridCellCenter}"/>
-                        <DataGridTextColumn Header="바코드구분" Width="auto" MinWidth="100" Binding="{Binding Path=LabelGubun}"/>
-                        <DataGridTextColumn Header="품명" Width="auto" MinWidth="100" Binding="{Binding Path=Article}" Visibility="Hidden"/>
-                        <DataGridTextColumn Header="색상" Width="auto" MaxWidth="0" Visibility="Hidden"/>
-                        <!--<DataGridTextColumn Header="수량" Width="auto" MinWidth="150" Binding="{Binding Path=OutQty}" ElementStyle="{StaticResource DataGridCellRight}" />-->
-
-                        <DataGridTemplateColumn Header="수량" IsReadOnly="True" SortMemberPath="OutQty">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox x:Name="txtQty" Width="auto" MinWidth="150" Foreground="Black"
-                                         Text="{Binding Path=OutQty}" IsReadOnly="True" 
-                                         VerticalContentAlignment="Center"  HorizontalContentAlignment="Right" KeyDown="txtQty_KeyDown" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <EventSetter Event="MouseDoubleClick" Handler="dgdOutwareSubRequest_MouseDoubleClick" />
-                                    <EventSetter Event="KeyDown" Handler="dgdOutwareSubRequest_KeyDown" />
-                                </Style>
-                            </DataGridTemplateColumn.CellStyle>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTextColumn Header="실수량" Width="auto" MinWidth="150" Binding="{Binding Path=OutRealQty}" ElementStyle="{StaticResource DataGridCellRight}"  Visibility="Hidden"/>
-                        <DataGridTextColumn Header="출고 subseq" Width="auto" MaxWidth="0" Binding="{Binding Path=OutSubSeq}" Visibility="Hidden"/>
-                        <DataGridTextColumn Header="단가" Width="auto" MaxWidth="0" Binding="{Binding Path=UnitPrice}" />
-                        <DataGridTextColumn Header="금액" Width="auto" MaxWidth="0" Binding="{Binding Path=Amount}" />
-                        <DataGridTextColumn Header="부가세별도" Width="auto" MaxWidth="0" Binding="{Binding Path=Vat_IND_YN}" />
-                        <DataGridTextColumn Header="OrderSeq" Width="auto" MaxWidth="0" Binding="{Binding Path=Orderseq}" />
-                        <DataGridTextColumn Header="고객라벨" Width="auto" MinWidth="150" Binding="{Binding Path=CustomBoxID}" Visibility="Hidden" />
                         <DataGridTemplateColumn Header="삭제" Width="auto" MinWidth="30">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -650,6 +795,53 @@
                                 </Style>
                             </DataGridTemplateColumn.CellStyle>
                         </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="바코드번호" Width="auto" MinWidth="150" Binding="{Binding Path= LabelID}" ElementStyle="{StaticResource DataGridCellCenter}"/>
+                        <DataGridTextColumn Header="바코드구분" Width="auto" MinWidth="100" Binding="{Binding Path=LabelGubun}"/>
+                        <DataGridTextColumn Header="품명" Width="auto" MinWidth="100" Binding="{Binding Path=Article}" Visibility="Hidden"/>
+                        <DataGridTextColumn Header="색상" Width="auto" MaxWidth="0" Visibility="Hidden"/>
+                        <!--<DataGridTextColumn Header="수량" Width="auto" MinWidth="150" Binding="{Binding Path=OutQty}" ElementStyle="{StaticResource DataGridCellRight}" />-->
+
+                        <DataGridTemplateColumn Header="수량" IsReadOnly="True" SortMemberPath="OutQty">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox x:Name="txtQty" Width="auto" MinWidth="150" Foreground="Black"
+                                         Text="{Binding Path=OutQty}" IsReadOnly="True" 
+                                         VerticalContentAlignment="Center"  HorizontalContentAlignment="Right" KeyDown="txtQty_KeyDown" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <EventSetter Event="MouseDoubleClick" Handler="dgdOutwareSubRequest_MouseDoubleClick" />
+                  
+                                </Style>
+                            </DataGridTemplateColumn.CellStyle>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="실수량" Width="auto" MinWidth="150" Binding="{Binding Path=OutRealQty}" ElementStyle="{StaticResource DataGridCellRight}"  Visibility="Hidden"/>
+                        <DataGridTextColumn Header="출고 subseq" Width="auto" MaxWidth="0" Binding="{Binding Path=OutSubSeq}" Visibility="Hidden"/>
+
+
+                        <DataGridTemplateColumn Header="단가" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox x:Name="txtUnitPrice" Width="auto" MinWidth="150" Foreground="Black"
+                                         Text="{Binding Path=UnitPrice}" IsReadOnly="True" 
+                                         VerticalContentAlignment="Center"  HorizontalContentAlignment="Right" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <EventSetter Event="MouseDoubleClick" Handler="dgdOutwareSubRequest_MouseDoubleClick" />                           
+                                </Style>
+                            </DataGridTemplateColumn.CellStyle>
+                        </DataGridTemplateColumn>
+
+                        <!--<DataGridTextColumn Header="단가" Width="auto"  Binding="{Binding Path=UnitPrice}" />-->
+                        <DataGridTextColumn Header="금액" Width="auto" MaxWidth="0" Binding="{Binding Path=Amount}" />
+                        <DataGridTextColumn Header="부가세별도" Width="auto" MaxWidth="0" Binding="{Binding Path=Vat_IND_YN}" />
+                        <DataGridTextColumn Header="OrderSeq" Width="auto" MaxWidth="0" Binding="{Binding Path=Orderseq}" />
+                        <DataGridTextColumn Header="고객라벨" Width="auto" MinWidth="150" Binding="{Binding Path=CustomBoxID}" Visibility="Hidden" />
+                      
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

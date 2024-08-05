@@ -434,6 +434,8 @@ namespace WizMes_HanMin
 
                 dgdOutwareSub.Items.Clear();
 
+                tgnMoveByID.IsHitTestVisible = true;
+                tgnMoveByQty.IsHitTestVisible = true;
                 
             }
             catch (Exception ee)
@@ -967,39 +969,69 @@ namespace WizMes_HanMin
             {
                 if (e.Key == Key.Enter)
                 {
-                    //1. 일반 케이스 (사내라벨 스캔시)
-                    if (txtScanData.Text.Trim().Length != 11)   // 삼주테크 바코드 길이 13자리로 확정
+                    if (tgnMoveByID.IsChecked == true)
                     {
-                        MessageBox.Show("잘못된 바코드 입니다.");
-                        txtScanData.Text = string.Empty;
-                        return;
-                    }
-
-                    if (txtScanData.Text.Substring(0, 1) == "P")
-                    {
-                        //2018.07.05 PACKINGID SCAN 과정 추가._허윤구.
-                        // 지금 스캔된 녀석은 PACKING이다.
-                        // 성공적으로 Packing List를 가져왔을 때,
-                        if (FindPackingLabelID(txtScanData.Text) == true)
+                        //1. 일반 케이스 (사내라벨 스캔시)
+                        if (txtScanData.Text.Trim().Length != 11)   // 삼주테크 바코드 길이 13자리로 확정
                         {
-                            string InsideLabelID = string.Empty;
+                            MessageBox.Show("잘못된 바코드 입니다.");
+                            txtScanData.Text = string.Empty;
+                            return;
+                        }
 
-                            // 리스트 내부 LabelID를 돌면서 박스 스캔. > SUBGRID 추가(여러개)
-                            for (int j = 0; j < LabelGroupList.Count; j++)
+                        if (txtScanData.Text.Substring(0, 1) == "P")
+                        {
+                            //2018.07.05 PACKINGID SCAN 과정 추가._허윤구.
+                            // 지금 스캔된 녀석은 PACKING이다.
+                            // 성공적으로 Packing List를 가져왔을 때,
+                            if (FindPackingLabelID(txtScanData.Text) == true)
                             {
-                                InsideLabelID = LabelGroupList[j].ToString();
+                                string InsideLabelID = string.Empty;
 
-                                FindBoxScanData(InsideLabelID);
+                                // 리스트 내부 LabelID를 돌면서 박스 스캔. > SUBGRID 추가(여러개)
+                                for (int j = 0; j < LabelGroupList.Count; j++)
+                                {
+                                    InsideLabelID = LabelGroupList[j].ToString();
+
+                                    FindBoxScanData(InsideLabelID);
+                                }
                             }
                         }
+                        else
+                        {
+                            //부품식별표 박스ID 스캔 > SUBGRID 추가
+                            FindBoxScanData(txtScanData.Text);
+                        }
+                        txtScanData.Text = string.Empty;
                     }
-                    else
+
+                    if (tgnMoveByQty.IsChecked == true)
                     {
-                        //부품식별표 박스ID 스캔 > SUBGRID 추가
-                        FindBoxScanData(txtScanData.Text);
+                        // 바코드에 수량을 입력 → 숫자만 입력 가능하도록 유효성 검사
+                        if (txtScanData.Text != "" && CheckConvertInt(txtScanData.Text))
+                        {
+                            // 수량 입력시 라벨 없이 입력됨
+                            Win_ord_OutWare_Scan_Sub_CodeView label = new Win_ord_OutWare_Scan_Sub_CodeView();
+
+                            int num = dgdOutwareSub.Items.Count + 1;
+                            label.Num = num;
+                            label.LabelID = "";
+                            //label.Spec = "";
+                            //label.Orderseq = orderSeq;
+                            label.OutQty = stringFormatN0(txtScanData.Text);
+                            dgdOutwareSub.Items.Add(label);
+
+                            // 데이터 그리드 등록 후 바코드 초기화
+                            txtScanData.Text = "";
+                        }
+                        else
+                        {
+                            MessageBox.Show("수량 등록에는 숫자만 입력 가능합니다.");
+                        }
+
                     }
-                    txtScanData.Text = string.Empty;
-                }
+
+                    }
 
                 SumScanQty();
             }
@@ -1007,6 +1039,22 @@ namespace WizMes_HanMin
             {
                 MessageBox.Show("오류지점 - txtScanData_KeyDown : " + ee.ToString());
             }
+        }
+
+        private bool CheckConvertInt(string str)
+        {
+            bool flag = false;
+            int chkInt = 0;
+
+            if (!str.Trim().Equals(""))
+            {
+                str = str.Trim().Replace(",", "");
+
+                if (Int32.TryParse(str, out chkInt) == true)
+                    flag = true;
+            }
+
+            return flag;
         }
 
         //PACKINGID SCAN 과정 > LABELID LIST 담기.
@@ -1862,7 +1910,7 @@ namespace WizMes_HanMin
                     MessageBox.Show("스캔된 라벨 정보가 없습니다.");
                     return false;
                 }
-                if (strFlag == "I")
+                if (strFlag == "I" && tgnMoveByID.IsChecked == true)
                 {
                     for (int i = 0; i < dgdOutwareSub.Items.Count; i++)
                     {
@@ -1874,7 +1922,7 @@ namespace WizMes_HanMin
                         DataTable dt = DataStore.Instance.ProcedureToDataSet("xp_Outware_chkiOutware", sqlParameter, false).Tables[0];
                         if (dt.Rows[0][0].Equals("F"))
                         {
-                            MessageBox.Show("재고에 있는 수량보다 많은 수량이 입려되어습니다.");
+                            MessageBox.Show("재고에 있는 수량보다 많은 수량이 입력되었습니다.");
                             return false;
                         }
                     }
@@ -2587,14 +2635,26 @@ namespace WizMes_HanMin
                             TextBoxComments.Focus();
                         });
                     }
+                    if (eventer == "단가")//(((eventer == "수량")) || (ButtonTag == "2") && (eventer == "Comments"))
+                    {
+                        List<TextBox> list = new List<TextBox>();
+                        lib.FindChildGroup<TextBox>(dgdOutwareSub, "txtUnitPrice", ref list);
+                        int target = dgdOutwareSub.Items.IndexOf(dgdOutwareSub.CurrentCell.Item);  //dgdOutRequest.SelectedIndex;
+                        TextBox TextBoxComments = list[target];
+
+                        TextBoxComments.IsReadOnly = false;
+                        TextBoxComments.Focus();
+
+                        Dispatcher.BeginInvoke((ThreadStart)delegate
+                        {
+                            TextBoxComments.Focus();
+                        });
+                    }
                 }
             }
         }
 
-        private void dgdOutwareSubRequest_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
+ 
 
         private void DataGrid_SizeChange(object sender, SizeChangedEventArgs e)
         {
@@ -2779,6 +2839,62 @@ namespace WizMes_HanMin
                 dtpToDate.SelectedDate = Convert.ToDateTime(e.RemovedItems[0].ToString());
             }
         }
+
+        private void tgnMoveByID_Click(object sender, RoutedEventArgs e)
+        {
+            tgnMoveByID.IsChecked = true;
+            tgnMoveByQty.IsChecked = false;
+
+            // 수량 입력 안되도록 → 수량기준이동 토글버튼이 활성화 됬을때만 입력 가능하도록
+            txtOutRoll.IsHitTestVisible = false;
+            txtOutQty.IsHitTestVisible = false;
+
+            // 바코드 활성화
+            txtScanData.IsHitTestVisible = true;
+
+            // 그리드 변경
+            dgdOutwareSub.Visibility = Visibility.Visible;
+
+            // OutRoll : 박스수, 서브그리드 갯수 / OutQty : 총 개수 - 구하기 
+            //SetOutRollAndOutQty();
+        }
+
+        private void tgnMoveByQty_Click(object sender, RoutedEventArgs e)
+        {
+            tgnMoveByID.IsChecked = false;
+            tgnMoveByQty.IsChecked = true;
+
+            // 수량 입력 되도록 → 바코드로 입력하도록 막아놓자.
+            txtOutRoll.IsHitTestVisible = false;
+            txtOutQty.IsHitTestVisible = false;
+
+            // 바코드 입력 안되도록 → 수량기준이동은 바코드가 아닌 수량으로 관리
+            //txtBarCode.IsHitTestVisible = false;
+
+            // 바코드 활성화
+            txtScanData.IsHitTestVisible = true;
+
+            // 그리드 변경
+            dgdOutwareSub.Visibility = Visibility.Visible;
+
+            // OutRoll : 박스수, 서브그리드 갯수 / OutQty : 총 개수 - 구하기 
+            //SetOutRollAndOutQty();
+        }
+
+        private void DataGridTextBoxUnitPrice_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            try
+            {
+                Lib.Instance.CheckIsNumeric((TextBox)sender, e);
+
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("오류지점 - DataGridTextBoxColorQty_PreviewTextInput : " + ee.ToString());
+            }
+        }
+
+  
     }
 
 

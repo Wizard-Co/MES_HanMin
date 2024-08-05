@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using WizMes_HanMin.PopUp;
 using WizMes_HanMin.PopUP;
 
@@ -94,6 +95,7 @@ namespace WizMes_HanMin
             cboWorkSrh.ItemsSource = ovcWork;
             cboWorkSrh.DisplayMemberPath = "code_name";
             cboWorkSrh.SelectedValuePath = "code_id";
+            cboWorkSrh.SelectedIndex = 0;
 
             ObservableCollection<CodeView> oveOrderForm = ComboBoxUtil.Instance.Gf_DB_CM_GetComCodeDataset(null, "ORDFRM", "Y", "", "");
             cboOrderForm.ItemsSource = oveOrderForm;
@@ -114,6 +116,7 @@ namespace WizMes_HanMin
             cboOrderClassSrh.ItemsSource = ovcOrderClss;
             cboOrderClassSrh.DisplayMemberPath = "code_name";
             cboOrderClassSrh.SelectedValuePath = "code_id";
+            cboOrderClassSrh.SelectedIndex = 0;
 
             ObservableCollection<CodeView> ovcWorkUnitClss = ComboBoxUtil.Instance.Gf_DB_CM_GetComCodeDataset(null, "CMMUNIT", "Y", "", "");
             //cboWorkUnitClss.ItemsSource = ovcWorkUnitClss;
@@ -143,6 +146,7 @@ namespace WizMes_HanMin
             this.cboCloseClssSrh.ItemsSource = cboCloseClssSrh;
             this.cboCloseClssSrh.DisplayMemberPath = "code_name";
             this.cboCloseClssSrh.SelectedValuePath = "code_id";
+            this.cboCloseClssSrh.SelectedIndex = 0;
 
             List<string> strVAT_Value = new List<string>();
             strVAT_Value.Add("Y");
@@ -836,7 +840,7 @@ namespace WizMes_HanMin
                             }
                             else
                             {
-                                MessageBox.Show("해당 수주 건은 작업지시 진행중이오니, 삭제하시려면 작업지시 먼저 삭제해주세요.");
+                                MessageBox.Show("해당 수주 건은 작업지시 진행중이오니, 삭제하시려면 작업지시 진행 관리에서 먼저 작업지시를 삭제해주세요");
                             }
                         }
                     }
@@ -1055,8 +1059,8 @@ namespace WizMes_HanMin
                 sqlParameter.Add("ChkCustom", chkCustomSrh.IsChecked == true ? 1 : 0);
                 sqlParameter.Add("CustomID", chkCustomSrh.IsChecked == true ? (txtCustomSrh.Tag != null ? txtCustomSrh.Tag.ToString() : "") : "");
 
-                sqlParameter.Add("ChkArticle", 0); //chkArticleSrh.IsChecked == true ? 1 : 0);
-                sqlParameter.Add("ArticleID", "");//chkArticleSrh.IsChecked == true ? (txtArticleSrh.Tag != null ? txtArticleSrh.Tag.ToString() : "") : "");
+                sqlParameter.Add("ChkArticle", CheckBoxArticleSearch.IsChecked == true ? 1:0); //chkArticleSrh.IsChecked == true ? 1 : 0);
+                sqlParameter.Add("ArticleID", CheckBoxArticleSearch.IsChecked == true? (TextBoxArticleSearch.Tag != null? TextBoxArticleSearch.Tag.ToString() : ""):"");//chkArticleSrh.IsChecked == true ? (txtArticleSrh.Tag != null ? txtArticleSrh.Tag.ToString() : "") : "");
                 sqlParameter.Add("ChkOrderID", chkOrderIDSrh.IsChecked == true ? 1 : 0);
                 sqlParameter.Add("Order", chkOrderIDSrh.IsChecked == true ? txtOrderIDSrh.Text : "");
                 sqlParameter.Add("ChkChemClss", 0);
@@ -1578,70 +1582,100 @@ namespace WizMes_HanMin
                 return flag;
             }
 
-
-            //수정시, 작업지시가 내려간 수주라면 품명을 변경하지 못하도록. 2020.03.25, 장가빈
-            if (strFlag.Equals("U"))
+            //작지, 출고 이력 있으면 삭제 안 됨
+            if (OrderView.OrderID != null)
             {
-
-                List<Procedure> Prolist = new List<Procedure>();
-                List<Dictionary<string, object>> ListParameter = new List<Dictionary<string, object>>();
-
-                Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
-                sqlParameter.Clear();
-                sqlParameter.Add("OrderID", txtOrderID.Text);
-                sqlParameter.Add("NewArticleID", txtArticle.Tag.ToString().Trim());
-                sqlParameter.Add("sMessage", "");
-
-                Procedure pro1 = new Procedure();
-                pro1.Name = "xp_Order_chkuOrder";
-                pro1.OutputUseYN = "Y";
-                pro1.OutputName = "sMessage";
-                pro1.OutputLength = "1000";
-
-                Prolist.Add(pro1);
-                ListParameter.Add(sqlParameter);
-
-                //동운씨가 만든 아웃풋 값 찾는 방법
-                List<KeyValue> list_Result = new List<KeyValue>();
-                list_Result = DataStore.Instance.ExecuteAllProcedureOutputGetCS(Prolist, ListParameter);
-
-                //Prolist.RemoveAt(0);
-                //ListParameter.RemoveAt(0);
-
-                string sGetID = string.Empty;
-
-                if (list_Result[0].key.ToLower() == "success")
+                string sql = "select OrderID from pl_Input where OrderID = " + OrderView.OrderID;
+                DataSet ds = DataStore.Instance.QueryToDataSet(sql);
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    //list_Result.RemoveAt(0);
-                    for (int i = 0; i < list_Result.Count; i++)
+                    DataTable dt = ds.Tables[0];
+                    if (dt.Rows.Count > 0)
                     {
-                        KeyValue kv = list_Result[i];
-                        if (kv.key == "sMessage")
+                        sql = "select OrderID from OutWare where OrderID = " + OrderView.OrderID;
+
+                        ds = DataStore.Instance.QueryToDataSet(sql);
+                        if (ds != null && ds.Tables.Count > 0)
                         {
-                            sGetID = kv.value;
-
-                            if (sGetID.Equals(""))
-                            {
-                                continue;    
-                            }
-
-                            MessageBox.Show( "알림 : " + sGetID.ToString());
+                            dt = ds.Tables[0];
+                            string msgg = dt.Rows.Count > 0 ?
+                                "해당 수주 건은 생산 진행중이오니, 변경하시려면 생산부터 작업지시까지 먼저 삭제해주세요" :
+                                "해당 수주 건은 작업지시 진행중이오니, 변경 하시려면 작업지시 진행 관리에서 먼저 삭제해주세요.";
+                            MessageBox.Show(msgg,"확인");
                             flag = false;
-
-
-                            //저장된 원래의 tag값 다시 넣어주기 2020.04.03, 장가빈
-                            //품명 변경 시도한 tag가 실패 후 계속 남아있는 것을 해결하기 위함.
-                            txtArticle.Tag = OrderView.ArticleID;
-
-
-                            //strFlag = string.Empty;
+                            return flag;
                         }
                     }
                 }
-                Prolist.Clear();
-                ListParameter.Clear();
-                return flag;
             }
+
+            #region ...
+
+            //수정시, 작업지시가 내려간 수주라면 품명을 변경하지 못하도록. 2020.03.25, 장가빈
+            //if (strFlag.Equals("U"))
+            //{
+
+            //    List<Procedure> Prolist = new List<Procedure>();
+            //    List<Dictionary<string, object>> ListParameter = new List<Dictionary<string, object>>();
+
+            //    Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
+            //    sqlParameter.Clear();
+            //    sqlParameter.Add("OrderID", txtOrderID.Text);
+            //    sqlParameter.Add("NewArticleID", txtArticle.Tag.ToString().Trim());
+            //    sqlParameter.Add("sMessage", "");
+
+            //    Procedure pro1 = new Procedure();
+            //    pro1.Name = "xp_Order_chkuOrder";
+            //    pro1.OutputUseYN = "Y";
+            //    pro1.OutputName = "sMessage";
+            //    pro1.OutputLength = "1000";
+
+            //    Prolist.Add(pro1);
+            //    ListParameter.Add(sqlParameter);
+
+            //    //동운씨가 만든 아웃풋 값 찾는 방법
+            //    List<KeyValue> list_Result = new List<KeyValue>();
+            //    list_Result = DataStore.Instance.ExecuteAllProcedureOutputGetCS(Prolist, ListParameter);
+
+            //    //Prolist.RemoveAt(0);
+            //    //ListParameter.RemoveAt(0);
+
+            //    string sGetID = string.Empty;
+
+            //    if (list_Result[0].key.ToLower() == "success")
+            //    {
+            //        //list_Result.RemoveAt(0);
+            //        for (int i = 0; i < list_Result.Count; i++)
+            //        {
+            //            KeyValue kv = list_Result[i];
+            //            if (kv.key == "sMessage")
+            //            {
+            //                sGetID = kv.value;
+
+            //                if (sGetID.Equals(""))
+            //                {
+            //                    continue;    
+            //                }
+
+            //                MessageBox.Show( "알림 : " + sGetID.ToString());
+            //                flag = false;
+
+
+            //                //저장된 원래의 tag값 다시 넣어주기 2020.04.03, 장가빈
+            //                //품명 변경 시도한 tag가 실패 후 계속 남아있는 것을 해결하기 위함.
+            //                txtArticle.Tag = OrderView.ArticleID;
+
+
+            //                //strFlag = string.Empty;
+            //            }
+            //        }
+            //    }
+            //    Prolist.Clear();
+            //    ListParameter.Clear();
+            //    return flag;
+            //}
+            #endregion
+
             return flag;
         }        
 
@@ -1696,21 +1730,22 @@ namespace WizMes_HanMin
                 if (e.Key == Key.Enter)
                 {
 
-                    if (txtCustom != null && txtCustom.Text != "")
-                    {   //선택된 납품거래처에 따른 품명만 보여주게
-                        //MainWindow.pf.ReturnCode(txtArticle, 57, txtCustom.Tag.ToString().Trim());
+                    //if (txtCustom != null && txtCustom.Text != "")
+                    //{   //선택된 납품거래처에 따른 품명만 보여주게
+                    //    //MainWindow.pf.ReturnCode(txtArticle, 57, txtCustom.Tag.ToString().Trim());
 
-                        //품번을 품명처럼 쓴다고 해서 품번을 조회하도록 2020.03.17, 장가빈
-                        MainWindow.pf.ReturnCodeHanMin(txtArticle, 80, txtCustom.Tag.ToString().Trim());
+                    //    //품번을 품명처럼 쓴다고 해서 품번을 조회하도록 2020.03.17, 장가빈
+                    //    MainWindow.pf.ReturnCodeHanMin(txtArticle, 80, txtCustom.Tag.ToString().Trim());
+                    //    MainWindow.pf.ReturnCodeHanMin(txtArticle, 80, txtCustom.Tag.ToString().Trim());
 
-                    }
-                    else
-                    {   //선택된 납품거래처가 없다면 전체 품명 다 보여주게
+                    //}
+                    //else
+                    //{   //선택된 납품거래처가 없다면 전체 품명 다 보여주게
                         //MainWindow.pf.ReturnCode(txtArticle, (int)Defind_CodeFind.DCF_Article, "");
 
                         //품번을 품명처럼 쓴다고 해서 품번을 조회하도록 2020.03.17, 장가빈
-                        MainWindow.pf.ReturnCodeHanMin(txtArticle, 81, "");
-                    }
+                        MainWindow.pf.ReturnCode(txtArticle, 81, "");
+                    //}
 
 
                     if (txtArticle.Tag != null)
