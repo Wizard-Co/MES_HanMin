@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -1005,8 +1004,9 @@ namespace WizMes_HanMin
                         txtScanData.Text = string.Empty;
                     }
 
-                    if (tgnMoveByQty.IsChecked == true)
+                    if (tgnMoveByQty.IsChecked == true && txtOrderID.Tag != null)
                     {
+                        
                         // 바코드에 수량을 입력 → 숫자만 입력 가능하도록 유효성 검사
                         if (txtScanData.Text != "" && CheckConvertInt(txtScanData.Text))
                         {
@@ -1019,6 +1019,7 @@ namespace WizMes_HanMin
                             //label.Spec = "";
                             //label.Orderseq = orderSeq;
                             label.OutQty = stringFormatN0(txtScanData.Text);
+                            label.UnitPrice = "0";
                             dgdOutwareSub.Items.Add(label);
 
                             // 데이터 그리드 등록 후 바코드 초기화
@@ -1030,8 +1031,12 @@ namespace WizMes_HanMin
                         }
 
                     }
-
+                    else
+                    {
+                        MessageBox.Show("관리번호를 먼저 검색하여 주십시오.","확인");
                     }
+
+                }
 
                 SumScanQty();
             }
@@ -1682,7 +1687,7 @@ namespace WizMes_HanMin
                             sqlParameter.Add("OrderID", txtOrderID.Text);
                             sqlParameter.Add("OutSeq", "");
                             sqlParameter.Add("OutSubSeq", i + 1);
-                            sqlParameter.Add("OrderSeq", OutwareSub.Orderseq);
+                            sqlParameter.Add("OrderSeq", OutwareSub.Orderseq == null? i + 1 : Convert.ToInt32(OutwareSub.Orderseq));
 
                             sqlParameter.Add("LineSeq", 0);
                             sqlParameter.Add("LineSubSeq", 0);
@@ -2568,45 +2573,111 @@ namespace WizMes_HanMin
             }
         }
 
-        private void txtQty_KeyDown(object sender, KeyEventArgs e)
+        private void SumColorQty()
         {
-            if (EventStatus == true)
+            try
             {
-                var ViewReceiver = dgdOutwareSub.CurrentCell.Item as Win_ord_OutWare_Scan_Sub_CodeView;  //선택 줄.
-                if (ViewReceiver != null)   // 널이 아니라면,
+                double OutQty = 0;
+
+                for (int i = 0; i < dgdOutwareSub.Items.Count; i++)
                 {
-                    try
+                    var label = dgdOutwareSub.Items[i] as Win_ord_OutWare_Scan_Sub_CodeView;
+                    if (label.OutQty != null)
                     {
-                        if (e.Key == Key.Enter)
-                        {
-                            e.Handled = true;
-                            int point = dgdOutwareSub.Items.IndexOf(ViewReceiver);
-
-                            double realQty = Double.Parse(ViewReceiver.OutRealQty);
-                            double beforeQty = Double.Parse(ViewReceiver.OutQty);
-
-                            DataGridCell tempOutQtyCell = lib.GetCell(point, 4, dgdOutwareSub);
-                            TextBox tempOutQtyTB = lib.GetVisualChild<TextBox>(tempOutQtyCell);
-
-
-                            if (Double.Parse(tempOutQtyTB.Text) > realQty)
-                            {
-                                MessageBox.Show("입력하신 수량이 재고수량보다 많습니다. 남은재고는 [ " + ViewReceiver.OutRealQty + " ]입니다.");
-                            }
-                            else
-                            {
-
-                                txtOutQty.Text = (Double.Parse(txtOutQty.Text) - beforeQty + Double.Parse(tempOutQtyTB.Text)).ToString();
-
-                                ViewReceiver.OutQty = tempOutQtyTB.Text;
-                            }
-                        }
-                    }
-                    catch (Exception ee)
-                    {
-                        MessageBox.Show("오류 시점 - 수량 입력후 엔터키" + ee.ToString());
+                        OutQty += lib.returnDouble(label.OutQty.ToString());
                     }
                 }
+
+                txtOutQty.Text = lib.returnNumStringZero(OutQty.ToString());
+
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("오류지점 - SumQty : " + ee.ToString());
+            }
+        }
+
+        private void txtQty_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                SumColorQty();
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("오류지점 - txtQty_KeyDown : " + ee.ToString());
+            }
+        }
+
+        #region ...
+        //private void txtQty_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (EventStatus == true)
+        //    {
+        //        var ViewReceiver = dgdOutwareSub.CurrentCell.Item as Win_ord_OutWare_Scan_Sub_CodeView;  //선택 줄.               
+        //        if (ViewReceiver != null)   // 널이 아니라면,
+        //        {
+        //            try
+        //            {
+        //                if (e.Key == Key.Enter)
+        //                {
+        //                    e.Handled = true;
+        //                    int point = dgdOutwareSub.Items.IndexOf(ViewReceiver);
+
+        //                    //double realQty = Double.Parse(ViewReceiver.OutRealQty);
+        //                    double beforeQty = Double.Parse(ViewReceiver.OutQty);
+
+        //                    DataGridCell tempOutQtyCell = lib.GetCell(point, 3, dgdOutwareSub);
+        //                    TextBox tempOutQtyTB = lib.GetVisualChild<TextBox>(tempOutQtyCell);
+
+
+        //                    if (Double.Parse(tempOutQtyTB.Text) > 0)
+        //                    {
+        //                        MessageBox.Show("입력하신 수량이 재고수량보다 많습니다. 남은재고는 [ " + ViewReceiver.OutRealQty + " ]입니다.");
+        //                    }
+        //                    else
+        //                    {
+
+        //                        txtOutQty.Text = (Double.Parse(txtOutQty.Text) - beforeQty + Double.Parse(tempOutQtyTB.Text)).ToString();
+
+        //                        ViewReceiver.OutQty = tempOutQtyTB.Text;
+        //                    }
+        //                }
+        //            }
+        //            catch (Exception ee)
+        //            {
+        //                MessageBox.Show("오류 시점 - 수량 입력후 엔터키" + ee.ToString());
+        //            }
+        //        }
+        //    }
+        //}
+        #endregion
+
+        //서브 데이터 그리드 수량 변경 이벤트
+        private void DataGridTextBoxColorQty_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                SumColorQty();
+
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("오류지점 - DataGridTextBoxColorQty_TextChanged : " + ee.ToString());
+            }
+        }
+
+        //서브 데이터 그리드 수량 숫자만 입력
+        private void DataGridTextBoxColorQty_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            try
+            {
+                Lib.Instance.CheckIsNumeric((TextBox)sender, e);
+
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("오류지점 - DataGridTextBoxColorQty_PreviewTextInput : " + ee.ToString());
             }
         }
 
@@ -2883,18 +2954,46 @@ namespace WizMes_HanMin
 
         private void DataGridTextBoxUnitPrice_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
+            //try
+            //{
+            //    Lib.Instance.CheckIsNumeric((TextBox)sender, e);
+
+            //}
+            //catch (Exception ee)
+            //{
+            //    MessageBox.Show("오류지점 - DataGridTextBoxColorQty_PreviewTextInput : " + ee.ToString());
+            //}
+        }
+
+
+        private void DataGridSub_GotFocus(object sender, RoutedEventArgs e)
+        {
             try
             {
-                Lib.Instance.CheckIsNumeric((TextBox)sender, e);
-
+                if (strFlag.Equals("I") || strFlag.Equals("U"))
+                {
+                    DataGridCell cell = sender as DataGridCell;
+                    cell.IsEditing = true;
+                }
             }
             catch (Exception ee)
             {
-                MessageBox.Show("오류지점 - DataGridTextBoxColorQty_PreviewTextInput : " + ee.ToString());
+                MessageBox.Show("오류지점 - DataGridSub_GotFocus " + ee.ToString());
             }
         }
 
-  
+        private void DataGridSub_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                Lib.Instance.DataGridINBothByMouseUP(sender, e);
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("오류지점 - DataGridSub_MouseUp " + ee.ToString());
+            }
+        }
+
     }
 
 

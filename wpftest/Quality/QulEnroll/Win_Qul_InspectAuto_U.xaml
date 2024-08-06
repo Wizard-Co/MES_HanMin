@@ -319,7 +319,7 @@
                 <ComboBox x:Name="cboResultSrh" Grid.Column="1" Background="White" IsEnabled="False" Style="{DynamicResource ComboBoxSearchString}"/>
             </Grid>
 
-            <Grid Grid.Column="2" Grid.Row="2">
+            <Grid Grid.Column="2" Grid.Row="2" Visibility="Hidden">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="90*" />
@@ -401,7 +401,7 @@
                         <ColumnDefinition Width="50*" />
                         <ColumnDefinition Width="50*" />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnPrint" Grid.Column="0"  Click="btnPrint_Click" Margin="1">
+                    <Button x:Name="btnPrint" Grid.Column="0"  Click="btnPrint_Click" Margin="1" Visibility="Hidden">
                         <StackPanel Orientation="Horizontal" >
                             <Image Source="{DynamicResource btiPrint}" Style="{DynamicResource imgSize}" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Vertical">
@@ -883,9 +883,11 @@
                             <TextBox x:Name="txtLotNO" Grid.Column="1" Grid.Row="2" Style="{DynamicResource TextBoxInputNecessary}"
                                      Keyboard.KeyDown="txtLotNO_KeyDown"
                                      Text="{Binding LotID}"/>
-                            <Button x:Name="btnPfLotNO" Grid.Column="2" Grid.Row="2" Content="e" 
+                            <Button x:Name="btnPfLotNO" Grid.Column="2" Grid.Row="2" 
                                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                    Click="btnPfLotNO_Click"/>
+                                    Click="btnPfLotNO_Click">
+                                <Image Source="{DynamicResource btiPlusFind}" />
+                            </Button>
 
                             <Label Grid.Column="3" Grid.Row="2" Style="{DynamicResource LabelInputArea}" >
                                 <TextBlock Text="EO-금형-순번" />
@@ -911,7 +913,7 @@
 
                             <Label Grid.Column="0" Grid.Row="3" HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center" Style="{DynamicResource LabelInputArea}" >
-                                <TextBlock Text="차     종" />
+                                <TextBlock Text="모     델" />
                             </Label>
                             <TextBox x:Name="txtBuyerModel" Grid.Column="1" Grid.Row="3" Style="{DynamicResource TextBoxInputArea}"
                                      Keyboard.KeyDown="txtBuyerModel_KeyDown"
@@ -1088,11 +1090,11 @@
                                 <ColumnDefinition Width="20*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                               
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Button x:Name="btnSKetch" Grid.Row="0" Grid.Column="0" Click="btnSKetch_Click" Tag="SKetch" Style="{DynamicResource btnInNoViewBox}" IsHitTestVisible="False" Height="24" Margin="0,0,0.4,0" VerticalAlignment="Bottom">
+                            <Button x:Name="btnSKetch" Grid.Row="0" Grid.Column="0" Click="btnSKetch_Click" Tag="SKetch" Style="{DynamicResource btnInNoViewBox}" IsHitTestVisible="False" >
                                 <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight_Q}">
                                     <TextBlock Text="약도등록" />
                                 </Viewbox>
@@ -1134,19 +1136,21 @@
                             </Button>
 
                             <!--정기점검 결과등록-->
-                            <Button x:Name="btnRegularAdd" Grid.Row="2" Grid.Column="0" Click="BtnRegularAdd_Click" Tag="Regular" Style="{DynamicResource btnInNoViewBox}" IsHitTestVisible="False">
+                            <Button x:Name="btnRegularAdd" Grid.Row="2" Grid.Column="0" Click="BtnRegularAdd_Click" Tag="Regular" Style="{DynamicResource btnInNoViewBox}" IsHitTestVisible="False" Visibility="Hidden">
                                 <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight_Q}">
                                     <TextBlock Text="정기점검 결과등록" />
                                 </Viewbox>
                             </Button>
                             <TextBox x:Name="txtRegular" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" IsHitTestVisible="False"
-                                     Text="{Binding RegularFile}" Tag="{Binding RegularPath}"/>
-                            <Button x:Name="btnRegular" Grid.Row="2" Grid.Column="4" Click="BtnRegular_Click" Tag="Regular" Style="{DynamicResource btnInNoViewBox}" IsHitTestVisible="False">
+                                     Text="{Binding RegularFile}" Tag="{Binding RegularPath}" Visibility="Hidden"/>
+                            <Button x:Name="btnRegular" Grid.Row="2" Grid.Column="4" 
+                                    Visibility="Hidden" Click="BtnRegular_Click" Tag="Regular" Style="{DynamicResource btnInNoViewBox}" IsHitTestVisible="False">
                                 <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight_Q}">
                                     <TextBlock Text="삭제"/>
                                 </Viewbox>
                             </Button>
-                            <Button x:Name="btnRegularDownload" Grid.Row="2" Grid.Column="5" Click="BtnRegularDownload_Click" Tag="Regular" Style="{DynamicResource btnInNoViewBox}">
+                            <Button x:Name="btnRegularDownload" Grid.Row="2" 
+                                    Visibility="Hidden" Grid.Column="5" Click="BtnRegularDownload_Click" Tag="Regular" Style="{DynamicResource btnInNoViewBox}">
                                 <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight_Q}">
                                     <TextBlock Text="내려받기" />
                                 </Viewbox>
@@ -1159,7 +1163,7 @@
                             <!--정기점검 기준서내려받기-->
                             <TextBox x:Name="txtRegularStd" Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="3" IsHitTestVisible="False" Visibility="Hidden"
                                      Text="{Binding Sketch1File}" Tag="{Binding Sketch1Path}"/>
-                            <Button x:Name="btnRegularStdDownload" Grid.Row="2" Grid.Column="6 " Grid.ColumnSpan="3" Click="BtnRegularStdDownload_Click" Tag="RegularStd" Style="{DynamicResource btnInNoViewBox}">
+                            <Button x:Name="btnRegularStdDownload" Grid.Row="2" Grid.Column="6 " Visibility="Hidden" Grid.ColumnSpan="3" Click="BtnRegularStdDownload_Click" Tag="RegularStd" Style="{DynamicResource btnInNoViewBox}">
                                 <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight_Q}">
                                     <TextBlock Text="정기점검 기준서 내려받기" />
                                 </Viewbox>

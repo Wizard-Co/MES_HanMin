@@ -275,6 +275,10 @@ namespace WizMes_HanMin
         private void ChkMoldNoSrh_Checked(object sender, RoutedEventArgs e)
         {
             txtMoldNoSrh.IsEnabled = true;
+            if(txtMoldNoSrh.Text == "")
+            {
+                txtMoldNoSrh.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            }
             txtMoldNoSrh.Focus();
         }
 
@@ -588,7 +592,7 @@ namespace WizMes_HanMin
             Lib.Instance.ChildMenuClose(this.ToString());
         }
 
-        // 검색 클릭
+        // 검 클릭
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             //검색버튼 비활성화
@@ -777,6 +781,8 @@ namespace WizMes_HanMin
 
                     if (dt.Rows.Count == 0)
                     {
+                        dgdSub.ItemsSource = null;
+                        ClearInputGrid();
                         MessageBox.Show("조회결과가 없습니다.");
                         return;
                     }
@@ -1827,7 +1833,39 @@ namespace WizMes_HanMin
             return string.Format("{0:N2}", obj);
         }
 
+        private void ClearInputGrid()
+        {
+            ClearTextLabel(gbxInput);
+        }
 
+        private void ClearTextLabel(DependencyObject parent)
+        {
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+
+            for (int i = 0; i < childCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is TextBox textBox)
+                {
+                    // TextBox를 찾으면 Text 속성을 빈 문자열로 설정
+                    textBox.Text = string.Empty;
+                }
+                if (child is ComboBox comboBox)
+                {
+                    comboBox.SelectedValue = "";
+                }
+                if(child is DatePicker datePicker)
+                {
+                    datePicker.SelectedDate = null;
+                }
+                else
+                {
+                    // 자식이 TextBox가 아니면 재귀적으로 그 자식의 자식들을 탐색
+                    ClearTextLabel(child);
+                }
+            }
+        }
 
         #region 포커스 이동용 키 다운 이벤트 모음
         private void txtECONO_KeyDown(object sender, KeyEventArgs e)

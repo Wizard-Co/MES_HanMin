@@ -495,7 +495,7 @@
 
                         <Label Grid.Row="4" Grid.Column="0" Style="{DynamicResource LabelInputArea_GB_Q}">
                             <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight_Q}" >
-                                <TextBlock Text="차    종"  Style="{DynamicResource TextBlockInViewBoxInput_Q}" />
+                                <TextBlock Text="모    델"  Style="{DynamicResource TextBlockInViewBoxInput_Q}" />
                             </Viewbox>
                         </Label>
                         <TextBox x:Name="txtCarModel" Grid.Row="4" Grid.Column="1" 
@@ -507,21 +507,21 @@
  
                    
                             <Button x:Name="btnFileUpload1" Grid.Column="0"  Grid.Row="5"  Content="정기점검기준서" Margin="1" Click="btnFileUpload_Click"
-                                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Tag="01" />
+                                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Tag="01" Visibility="Hidden"/>
                             <TextBox x:Name="txtSketch1" Grid.Column="1"  Grid.Row="5"  IsReadOnly="True" Style="{DynamicResource TextBoxInputArea}"
-                                            Text="{Binding Sketch1File}" Tag="{Binding Sketch1Path}"/>
-                            <Button x:Name="btnFileDelete1" Grid.Column="2" Grid.Row="5" Content="삭제" Margin="1" Tag="01" Click="btnFileDelete_Click"/>
-                            <Button x:Name="btnFileSee1" Grid.Column="3" Grid.Row="5" Content="보기" Margin="1" Tag="01" Click="btnFileSee_Click"/>
+                                            Text="{Binding Sketch1File}" Tag="{Binding Sketch1Path}" Visibility="Hidden"/>
+                            <Button x:Name="btnFileDelete1" Grid.Column="2" Grid.Row="5" Content="삭제" Margin="1" Tag="01" Click="btnFileDelete_Click" Visibility="Hidden"/>
+                            <Button x:Name="btnFileSee1" Grid.Column="3" Grid.Row="5" Content="보기" Margin="1" Tag="01" Click="btnFileSee_Click" Visibility="Hidden"/>
 
                         
                         
-                        <Label Grid.Row="8" Grid.Column="4"  Style="{DynamicResource LabelInputArea}">
+                        <Label Grid.Row="8" Grid.Column="4"  Style="{DynamicResource LabelInputArea}" Visibility="Hidden">
                             <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
                                 <TextBlock Text="점검주기구분" Style="{DynamicResource TextBlockInViewBoxInput}"/>
                             </Viewbox>
                         </Label>
                         <ComboBox x:Name="cboRegularGbn" Grid.Row="8" Grid.Column="5" Style="{StaticResource ComboBoxInputString}"
-                                  SelectedValue="{Binding ChkRegularGbn}"/>
+                                  SelectedValue="{Binding ChkRegularGbn}" Visibility="Hidden"/>
                         
                         <Label Grid.Row="4" Grid.Column="3" HorizontalContentAlignment="Center" 
                                VerticalContentAlignment="Center" Visibility="Hidden">
@@ -777,7 +777,7 @@
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
                         
-                        <DataGridTemplateColumn Header="이미지" >
+                        <DataGridTemplateColumn Header="이미지"  Visibility="Hidden">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding InsImageFile, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="2" />
@@ -789,7 +789,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="보기">
+                        <DataGridTemplateColumn Header="보기" Visibility="Hidden">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <!--<TextBlock Margin="2" Text="{Binding McImageView}" />-->

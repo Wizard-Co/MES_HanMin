@@ -751,6 +751,7 @@ namespace WizMes_HanMin
         {
             strFlag = "I";
             this.DataContext = null;
+            OrderView = new Win_ord_Order_U_CodeView();
 
             //cboVAT_YN 부가세별도 값은 Y로 기본 값 셋팅
             cboVAT_YN.SelectedIndex = 0;
@@ -768,6 +769,8 @@ namespace WizMes_HanMin
                 dgdNeedStuff.Items.Clear();
             }
 
+            txtOrderID.Text = string.Empty;
+            TextBoxOrderNo.Text = string.Empty;
             cboOrderForm.SelectedIndex = 0;
             cboOrderNO.SelectedIndex = 0;
             cboArticleGroup.SelectedIndex = 0;

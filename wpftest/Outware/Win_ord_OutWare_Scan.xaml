@@ -775,6 +775,12 @@
                           KeyDown="dgdOutwareSub_KeyDown"
                           SizeChanged="DataGrid_SizeChange"
                           Style="{DynamicResource DataGridSet1}">
+
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <EventSetter Event="GotFocus" Handler="DataGridSub_GotFocus" />
+                            <EventSetter Event="MouseUp" Handler="DataGridSub_MouseUp" />                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="삭제" Width="auto" MinWidth="30">
                             <DataGridTemplateColumn.CellTemplate>
@@ -796,12 +802,12 @@
                             </DataGridTemplateColumn.CellStyle>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="바코드번호" Width="auto" MinWidth="150" Binding="{Binding Path= LabelID}" ElementStyle="{StaticResource DataGridCellCenter}"/>
-                        <DataGridTextColumn Header="바코드구분" Width="auto" MinWidth="100" Binding="{Binding Path=LabelGubun}"/>
+                        <DataGridTextColumn Header="바코드구분" Width="auto" MinWidth="100" Binding="{Binding Path=LabelGubun}" Visibility="Hidden"/>
                         <DataGridTextColumn Header="품명" Width="auto" MinWidth="100" Binding="{Binding Path=Article}" Visibility="Hidden"/>
                         <DataGridTextColumn Header="색상" Width="auto" MaxWidth="0" Visibility="Hidden"/>
                         <!--<DataGridTextColumn Header="수량" Width="auto" MinWidth="150" Binding="{Binding Path=OutQty}" ElementStyle="{StaticResource DataGridCellRight}" />-->
 
-                        <DataGridTemplateColumn Header="수량" IsReadOnly="True" SortMemberPath="OutQty">
+                        <!--<DataGridTemplateColumn Header="수량" IsReadOnly="True" SortMemberPath="OutQty">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox x:Name="txtQty" Width="auto" MinWidth="150" Foreground="Black"
@@ -811,17 +817,37 @@
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellStyle>
                                 <Style TargetType="DataGridCell">
-                                    <EventSetter Event="MouseDoubleClick" Handler="dgdOutwareSubRequest_MouseDoubleClick" />
-                  
+                                    <EventSetter Event="MouseDoubleClick" Handler="dgdOutwareSubRequest_MouseDoubleClick" />                  
                                 </Style>
                             </DataGridTemplateColumn.CellStyle>
+                        </DataGridTemplateColumn>-->
+
+                        <DataGridTemplateColumn Header="수량" MinWidth="60" Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="txtQty" Width="auto"  Foreground="Black" MinWidth="50"
+                                         Text="{Binding OutQty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                                               HorizontalAlignment="Right" 
+                                               KeyDown="txtQty_KeyDown" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox x:Name="DataGridTextBoxColorQty" Text="{Binding OutQty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
+                                               Foreground="Black" Width="auto"  MinWidth="50"
+                                               HorizontalAlignment="Right"
+                                               KeyDown="txtQty_KeyDown"
+                                               PreviewTextInput="DataGridTextBoxColorQty_PreviewTextInput" TextChanged="DataGridTextBoxColorQty_TextChanged"></TextBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                         </DataGridTemplateColumn>
 
                         <DataGridTextColumn Header="실수량" Width="auto" MinWidth="150" Binding="{Binding Path=OutRealQty}" ElementStyle="{StaticResource DataGridCellRight}"  Visibility="Hidden"/>
                         <DataGridTextColumn Header="출고 subseq" Width="auto" MaxWidth="0" Binding="{Binding Path=OutSubSeq}" Visibility="Hidden"/>
 
 
-                        <DataGridTemplateColumn Header="단가" IsReadOnly="True">
+                        <!--<DataGridTemplateColumn Header="단가" IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox x:Name="txtUnitPrice" Width="auto" MinWidth="150" Foreground="Black"
@@ -834,6 +860,21 @@
                                     <EventSetter Event="MouseDoubleClick" Handler="dgdOutwareSubRequest_MouseDoubleClick" />                           
                                 </Style>
                             </DataGridTemplateColumn.CellStyle>
+                        </DataGridTemplateColumn-->
+
+                        <DataGridTemplateColumn Header="단가" MinWidth="80" Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding UnitPrice, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox x:Name="DataGridTextBoxUnitPrice" Text="{Binding UnitPrice, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  Foreground="Black"
+                                           PreviewTextInput="DataGridTextBoxUnitPrice_PreviewTextInput"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center"></TextBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
 
                         <!--<DataGridTextColumn Header="단가" Width="auto"  Binding="{Binding Path=UnitPrice}" />-->

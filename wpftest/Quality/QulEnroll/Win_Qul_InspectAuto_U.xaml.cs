@@ -553,7 +553,10 @@ namespace WizMes_HanMin
                 CantBtnControl();
                 strFlag = "U";
                 txtInspectQty.Text = GetValueCount().ToString();
-                GetLotID(txtLotNO.Text.Trim(), strPoint);
+                if(txtLotNO.Text.Trim() != "")
+                {
+                    GetLotID(txtLotNO.Text.Trim(), strPoint);
+                }
                 txtInspectQty.Text = WinInsAuto.InspectQty;
                 txtTotalDefectQty.Text = WinInsAuto.TotalDefectQty;
             }
@@ -3884,8 +3887,11 @@ namespace WizMes_HanMin
                 if (ds != null && ds.Tables.Count > 0)
                 {
                     DataTable dt = ds.Tables[0];
-
-                    if (dt.Rows.Count > 0)
+                    if(dt.Rows.Count == 0)
+                    {
+                        MessageBox.Show("검색 결과가 없습니다.");
+                    }
+                    else if (dt.Rows.Count > 0)
                     {
                         DataRow dr = dt.Rows[0];
 
