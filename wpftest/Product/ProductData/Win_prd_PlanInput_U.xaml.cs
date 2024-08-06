@@ -792,11 +792,11 @@ namespace WizMes_HanMin
             }
 
             // 지시 완료가 되어 있다면!!!
-            if (WinPlan.PlanComplete.Trim().Equals("*"))
-            {
-                MessageBox.Show("지시완료가 된 작업지시입니다.");
-                return false;
-            }
+            //if (WinPlan.PlanComplete.Trim().Equals("*"))
+            //{
+            //    MessageBox.Show("지시완료가 된 작업지시입니다.");
+            //    return false;
+            //}
 
             // 지시일자
             if (dtpInstDate.SelectedDate == null)
