@@ -263,7 +263,7 @@
                     </StackPanel>
                 </Button>
                 <!--TSC프린터-->
-                <Button x:Name="btnLotTscPrint" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="1" Click="Button_Click" Tag="2">
+                <Button x:Name="btnLotTscPrint" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="1" Click="Button_Click" Tag="2" Visibility="Hidden">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{DynamicResource btiPrint}" Style="{DynamicResource imgSize}" VerticalAlignment="Center"/>
                         <TextBlock Text="Lot라벨 TSC프린터" VerticalAlignment="Center"/>

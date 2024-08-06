@@ -1576,12 +1576,12 @@ namespace WizMes_HanMin
                 {
 
 
-                    if (txtCustom.Tag == null || txtCustom.Tag.ToString().Trim().Equals("")
-                 || txtCustom.Text.Trim().Equals(""))
-                    {
-                        MessageBox.Show("거래처를 먼저 선택해주세요.");
-                        return;
-                    }
+                 //   if (txtCustom.Tag == null || txtCustom.Tag.ToString().Trim().Equals("")
+                 //|| txtCustom.Text.Trim().Equals(""))
+                 //   {
+                 //       MessageBox.Show("거래처를 먼저 선택해주세요.");
+                 //       return;
+                 //   }
 
 
                     if (txtCustom != null && txtCustom.Text != "")
@@ -1642,12 +1642,12 @@ namespace WizMes_HanMin
             //}
             try
             {
-                if (txtCustom.Tag == null || txtCustom.Tag.ToString().Trim().Equals("")
-                 || txtCustom.Text.Trim().Equals(""))
-                {
-                    MessageBox.Show("거래처를 먼저 선택해주세요.");
-                    return;
-                }
+                //if (txtCustom.Tag == null || txtCustom.Tag.ToString().Trim().Equals("")
+                // || txtCustom.Text.Trim().Equals(""))
+                //{
+                //    MessageBox.Show("거래처를 먼저 선택해주세요.");
+                //    return;
+                //}
 
                 if (txtCustom != null && txtCustom.Text != "")
                 {   //선택된 납품거래처에 따른 품명만 보여주게

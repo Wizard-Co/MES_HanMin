@@ -853,20 +853,20 @@ namespace WizMes_HanMin
         // 품명 그룹 콤보박스 선택 이벤트
         private void cboArticleGrp_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lblMsg.Visibility == Visibility.Visible)
-            {
-                //원자재 선택시 KG, 품명그룹 01 =원자재
-                if (cboArticleGrp.SelectedValue.Equals("01"))
-                {
-                    cboUnitClss.SelectedValue = "2";
-                }
-                else    //나머지는 EA 
-                {
-                    cboUnitClss.SelectedValue = "0";
-                }
+            //if (lblMsg.Visibility == Visibility.Visible)
+            //{
+            //    //원자재 선택시 KG, 품명그룹 01 =원자재
+            //    if (cboArticleGrp.SelectedValue.Equals("01"))
+            //    {
+            //        cboUnitClss.SelectedValue = "2";
+            //    }
+            //    else    //나머지는 EA 
+            //    {
+            //        cboUnitClss.SelectedValue = "0";
+            //    }
 
-                //cboProductGrpID.IsDropDownOpen = true;
-            }
+            //    //cboProductGrpID.IsDropDownOpen = true;
+            //}
         }
 
         // 화폐단위 동기화
