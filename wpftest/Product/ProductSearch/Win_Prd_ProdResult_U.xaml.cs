@@ -68,7 +68,6 @@ namespace WizMes_HanMin
         {
             Lib.Instance.UiButtonEnableChange_SCControl(this);
 
-            txtQty.IsEnabled = true;
             dtpProdDate.IsEnabled = true;
             txtProdScanTime.IsEnabled = true;
 
@@ -95,7 +94,6 @@ namespace WizMes_HanMin
         {
             Lib.Instance.UiButtonEnableChange_IUControl(this);
 
-            txtQty.IsEnabled = false;
             dtpProdDate.IsEnabled = false;
             txtProdScanTime.IsEnabled = false;
 
@@ -699,13 +697,7 @@ namespace WizMes_HanMin
                 if (Main != null)
                 {
                     SaveUpdateMode();
-
-                    // HanMin 2020.05.19 수량 변경에 문제가 많아 작업수량을 막음
-                    txtQty.IsEnabled = false;
-
-                    // 정렬이 생산일자 이기 때문에, 생산일자가 변경되면 행순서도 변경 되어 수정시 찾아갈 수가 없음.
-                    // JobId 로 찾아가도록 수정
-                    //rowNum = dgdResult.SelectedIndex;
+                  
                     jobID = Main.JobID.Trim();
                     strFlag = "U";
                 }
@@ -1732,6 +1724,52 @@ namespace WizMes_HanMin
         }
 
         #endregion
+
+        #region 작업시간 자동계산
+        private void txtStartTime_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            calcurateTime();
+        }
+
+        private void txtEndTime_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            calcurateTime();
+        }
+
+        public void calcurateTime()
+        {
+            try
+            {
+                if (txtStartTime.Text != string.Empty && txtEndTime.Text != string.Empty && txtStartTime.Text.Length == 8)
+                {
+                    string SDate = dtpWorkStartDate.SelectedDate.Value.ToString("yyyy-MM-dd") + " " + txtStartTime.Text;
+
+                    if (dtpWorkEndDate.SelectedDate.Value != null)
+                    {
+                        string EDate = dtpWorkEndDate.SelectedDate.Value.ToString("yyyy-MM-dd") + " " + txtEndTime.Text;
+                        DateTime StartDate = Convert.ToDateTime(SDate);
+                        DateTime EndDate = Convert.ToDateTime(EDate);
+
+                        TimeSpan dateDiff = EndDate - StartDate;
+
+                        double totalMinutes = dateDiff.TotalMinutes;
+
+                        txtWorkMinute.Text = Math.Round(totalMinutes).ToString();
+                    }
+                    else
+                    {
+                        MessageBox.Show("작업 종료 시간이 없습니다");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        #endregion
+
 
         private void txtQty_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
