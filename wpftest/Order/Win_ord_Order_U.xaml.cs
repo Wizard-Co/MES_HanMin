@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using WizMes_HanMin.PopUp;
 using WizMes_HanMin.PopUP;
 
@@ -750,7 +751,7 @@ namespace WizMes_HanMin
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             strFlag = "I";
-            this.DataContext = null;
+            this.DataContext = new object();
             OrderView = new Win_ord_Order_U_CodeView();
 
             //cboVAT_YN 부가세별도 값은 Y로 기본 값 셋팅
@@ -1012,7 +1013,7 @@ namespace WizMes_HanMin
             }
             else
             {
-                this.DataContext = null;
+                this.DataContext = new object();
             }
 
             CalculGridSum();
@@ -1095,6 +1096,7 @@ namespace WizMes_HanMin
 
                     if (dt.Rows.Count == 0)
                     {
+                        ClearInputGrid();
                         MessageBox.Show("조회된 데이터가 없습니다.");
                     }
                     else
@@ -1585,7 +1587,7 @@ namespace WizMes_HanMin
                 return flag;
             }
 
-            //작지, 출고 이력 있으면 삭제 안 됨
+           
             if (OrderView.OrderID != null)
             {
                 string sql = "select OrderID from pl_Input where OrderID = " + OrderView.OrderID;
@@ -2133,6 +2135,41 @@ namespace WizMes_HanMin
             }
 
             return result;
+        }
+
+        //남아있는 데이터로 오류 방지 입력칸 비우기
+        private void ClearInputGrid()
+        {
+            //여기에 비우고자 하는 그리드를 파라미터로 적어주세요
+            ClearTextLabel(grdInput);
+        }
+
+        //UI컨트롤을 찾아 해당하는 요소가 있으면 내용을 비움
+        private void ClearTextLabel(DependencyObject parent)
+        {
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+
+            for (int i = 0; i < childCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is TextBox textBox)
+                {
+                    // TextBox를 찾으면 Text 속성을 빈 문자열로 설정
+                    textBox.Text = string.Empty;
+                    textBox.Tag = null;
+                }
+                if (child is ComboBox comboBox)
+                {
+                    //콤보박스 선택값 비워줌
+                    comboBox.SelectedValue = "";
+                }
+                else
+                {
+                    // 자식이 TextBox가 아니면 재귀적으로 그 자식의 자식들을 탐색
+                    ClearTextLabel(child);
+                }
+            }
         }
 
 

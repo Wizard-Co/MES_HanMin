@@ -608,6 +608,8 @@ namespace WizMes_HanMin
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
+            txtBox.Text = string.Empty;
+            txtBox.Tag = null;
             this.Close();
         }
 

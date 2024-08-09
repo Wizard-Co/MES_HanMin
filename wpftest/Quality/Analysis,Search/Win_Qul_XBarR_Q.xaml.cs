@@ -899,17 +899,22 @@ namespace WizMes_HanMin
         // 차트 ㅡ그리기.
         private void FillChart_Double()
         {
+            //통계하단치의 값이 비어있지 않으면 string의 값을 변환해서 넣기...
             if (txtXbarUCL.Text != string.Empty) { X_chart_UCL = Convert.ToDouble(Lib.Instance.returnNumStringTargetNum(txtXbarUCL.Text,3).Replace(",","")); }
             if (txtXbarCL.Text != string.Empty) { X_chart_CL = Convert.ToDouble(Lib.Instance.returnNumStringTargetNum(txtXbarCL.Text,3).Replace(",", "")); }
             if (txtXbarLCL.Text != string.Empty) { X_chart_LCL = Convert.ToDouble(Lib.Instance.returnNumStringTargetNum(txtXbarLCL.Text,3).Replace(",", "")); }
 
+            //R-Chart
             if (txtRUCL.Text != string.Empty) { R_chart_UCL = Convert.ToDouble(Lib.Instance.returnNumStringTargetNum(txtRUCL.Text,3).Replace(",", "")); }
             if (txtRCL.Text != string.Empty) { R_chart_CL = Convert.ToDouble(Lib.Instance.returnNumStringTargetNum(txtRCL.Text,3).Replace(",", "")); }
 
+            //선 4개를 선언
             ChartValues<double> XUCL_Charts = new ChartValues<double>();
             ChartValues<double> XCL_Charts = new ChartValues<double>();
             ChartValues<double> XLCL_Charts = new ChartValues<double>();
             ChartValues<double> XVal_Charts = new ChartValues<double>();
+
+            //X축 라벨 선언
             List<string> XLabels = new List<string>();
             List<string> RLabels = new List<string>();
 
