@@ -414,35 +414,35 @@
                         <DataGridTemplateColumn Header="  수 주 량  " Width="auto" SortMemberPath="OrderQty">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding OrderQty,StringFormat={}{0:#\,#.##}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding OrderQty,StringFormat=N0}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="  계 획 량  " Width="auto" SortMemberPath="OrderInstQy">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding OrderInstQy,StringFormat={}{0:#\,#.##}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding OrderInstQy,StringFormat=N0}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="합계 계획량" Width="auto" SortMemberPath="TotOrderinstqty">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding TotOrderinstqty,StringFormat={}{0:#\,#}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding TotOrderinstqty,StringFormat=N0}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="합계 미계획량" Width="auto" SortMemberPath="notOrderInstQty">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding notOrderInstQty,StringFormat={}{0:#\,#}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding notOrderInstQty,StringFormat=N0}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="합계 투입량" Width="auto" SortMemberPath="p1WorkQty">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding p1WorkQty,StringFormat={}{0:#\,#}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding p1WorkQty,StringFormat=N0}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -450,14 +450,14 @@
                         <DataGridTemplateColumn Header="합계 검사량" Width="auto" SortMemberPath="InspectQty">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding InspectQty,StringFormat={}{0:#\,#}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding InspectQty,StringFormat=N0}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="합계 출고량" Width="auto" SortMemberPath="OutQty">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding OutQty,StringFormat={}{0:#\,#}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding OutQty,StringFormat=N0}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -466,7 +466,7 @@
                         <DataGridTemplateColumn Header="품명그룹" Width="auto" >
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding ArticleGrpName}" Tag="{Binding ArticleGrpID}" />
+                                    <TextBlock Text="{Binding ArticleGrp}" Tag="{Binding ArticleGrpID}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
