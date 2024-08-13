@@ -170,7 +170,9 @@
                     <ColumnDefinition Width="15*" />
                 </Grid.ColumnDefinitions>
 
-                <Label  Grid.Column="0" Grid.Row="0" MouseLeftButtonUp="chkInOutGubun_Click" Style="{DynamicResource LabelSearch}">
+                <Label  Grid.Column="0" Grid.Row="0" MouseLeftButtonUp="chkInOutGubun_Click" 
+                        Style="{DynamicResource LabelSearch}"
+                        Visibility="Hidden">
                     <StackPanel Style="{DynamicResource StackPanelInLabel}">
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
                             <CheckBox x:Name="chkInOutGubun" Click="chkInOutGubun_Click" ></CheckBox>
@@ -181,9 +183,13 @@
 
                     </StackPanel>
                 </Label>
-                <ComboBox x:Name="cboInOutGubun" Grid.Column="1" Grid.Row="0" Style="{DynamicResource ComboBoxSearchString}" />
-
-                <Label  Grid.Column="0" Grid.Row="1" MouseLeftButtonUp="chkInInspectGubun_Click" Style="{DynamicResource LabelSearch}">
+                <ComboBox x:Name="cboInOutGubun" Grid.Column="1" Grid.Row="0" 
+                          Style="{DynamicResource ComboBoxSearchString}"
+                          Visibility="Hidden"/>
+                
+                <Label  Grid.Column="0" Grid.Row="1" MouseLeftButtonUp="chkInInspectGubun_Click" 
+                        Style="{DynamicResource LabelSearch}"
+                        Visibility="Hidden">
                     <StackPanel Style="{DynamicResource StackPanelInLabel}">
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
                             <CheckBox x:Name="chkInInsepectGubun" Click="chkInInspectGubun_Click" ></CheckBox>
@@ -194,8 +200,13 @@
 
                     </StackPanel>
                 </Label>
-                <ComboBox x:Name="cboInInspectGubun"  Grid.Column="1" Grid.Row="1" Style="{DynamicResource ComboBoxSearchString}" />
-                <Label Grid.Column="0" Grid.Row="2" Style="{DynamicResource LabelSearch}">
+                <ComboBox x:Name="cboInInspectGubun"  Grid.Column="1" Grid.Row="1" 
+                          Style="{DynamicResource ComboBoxSearchString}"
+                          Visibility="Hidden"/>
+                
+                <Label Grid.Column="0" Grid.Row="2" 
+                       Style="{DynamicResource LabelSearch}"
+                       Visibility="Hidden">
                     <StackPanel Style="{DynamicResource StackPanelInLabel}">
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
                             <CheckBox x:Name="chkMainInterestItem" Click="chkInInspectGubun_Click" ></CheckBox>
@@ -206,7 +217,9 @@
 
                     </StackPanel>
                 </Label>
-                <Label Grid.Column="0" Grid.Row="3"  Style="{DynamicResource LabelSearch}">
+                <Label Grid.Column="0" Grid.Row="3"  
+                       Style="{DynamicResource LabelSearch}"
+                       Visibility="Hidden">
                     <StackPanel Style="{DynamicResource StackPanelInLabel}">
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
                             <CheckBox x:Name="chkCustomsEnrollItem" Click="chkInInspectGubun_Click" ></CheckBox>

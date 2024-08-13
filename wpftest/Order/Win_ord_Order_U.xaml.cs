@@ -11,6 +11,19 @@ using System.Windows.Media;
 using WizMes_HanMin.PopUp;
 using WizMes_HanMin.PopUP;
 
+
+/**************************************************************************************************
+'** 프로그램명 : Win_ord_Order_U
+'** 설명       : 수주등록
+'** 작성일자   : 2023.04.03
+'** 작성자     : 장시영
+'**------------------------------------------------------------------------------------------------
+'**************************************************************************************************
+' 변경일자  , 변경자, 요청자    , 요구사항ID      , 요청 및 작업내용
+'**************************************************************************************************
+' 2023.04.03, 장시영, 저장시 xp_Order_dOrderColorAll 내용 삭제 - xp_Order_uOrder 에서 동작하도록 수정
+'**************************************************************************************************/
+
 namespace WizMes_HanMin
 {
     /// <summary>
@@ -829,7 +842,35 @@ namespace WizMes_HanMin
                 if (ds != null && ds.Tables.Count > 0)
                 {
                     DataTable dt = ds.Tables[0];
-                    if (dt.Rows.Count > 0)
+                    if(dt.Rows.Count == 0)
+                    {
+                        sql = "select OrderID from OutWare where OrderID = " + OrderView.OrderID;
+                        ds = DataStore.Instance.QueryToDataSet(sql);
+                      
+                        dt= ds.Tables[0];
+                        if (dt.Rows.Count > 0)
+                        {
+                            string msg = "출고이력이 있는 수주입니다." +
+                            "\n삭제하려면 해당수주번호의 출고를 삭제해주세요";
+                            MessageBox.Show(msg, "확인");
+                        }
+                        else
+                        {
+                            if (MessageBox.Show("선택하신 항목을 삭제하시겠습니까?", "삭제 전 확인", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            {
+                                if (dgdMain.Items.Count > 0 && dgdMain.SelectedItem != null)
+                                    rowNum = dgdMain.SelectedIndex;
+
+                                if (DeleteData(OrderView.OrderID))
+                                {
+                                    rowNum = Math.Max(0, rowNum - 1);
+                                    re_Search(rowNum);
+                                }
+                            }
+                        }
+                        
+                    }
+                    else if (dt.Rows.Count > 0)
                     {
                         sql = "select OrderID from OutWare where OrderID = " + OrderView.OrderID;
 
@@ -1260,6 +1301,7 @@ namespace WizMes_HanMin
             {
                 //셀렉트한 값으로 태그값 넣어주기. 혹시 모르니까.
                 txtCustom.Tag = OrderView.CustomID;
+                txtInCustom.Tag = OrderView.InCustomID;
                 txtArticle.Tag = OrderView.ArticleID;
 
                 this.DataContext = OrderView;
@@ -1591,11 +1633,45 @@ namespace WizMes_HanMin
             if (OrderView.OrderID != null)
             {
                 string sql = "select OrderID from pl_Input where OrderID = " + OrderView.OrderID;
-                DataSet ds = DataStore.Instance.QueryToDataSet(sql);
+                DataSet ds = DataStore.Instance.QueryToDataSet(sql);  
                 if (ds != null && ds.Tables.Count > 0)
                 {
-                    DataTable dt = ds.Tables[0];
-                    if (dt.Rows.Count > 0)
+                    DataTable dt = ds.Tables[0];              
+                    if(dt.Rows.Count == 0)
+                    {
+                        sql = "select OrderID from OutWare where OrderID = " + OrderView.OrderID;
+                        ds = DataStore.Instance.QueryToDataSet(sql);
+                        dt = ds.Tables[0];
+                        if(dt.Rows.Count > 0)
+                        {
+                            string msgg = string.Empty;
+
+                            if (OrderView.ArticleID != txtArticle.Tag.ToString())
+                            {
+                                msgg = "해당 수주번호로 출고이력이\n있으므로 품명을 변경할 수 없습니다.";
+                                MessageBox.Show(msgg, "확인");
+                            }
+                            if (OrderView.CustomID != txtCustom.Tag.ToString())
+                            {
+                                msgg = "해당 수주번호로 출고이력이\n있으므로 거래처를 변경할 수 없습니다.";
+                                MessageBox.Show(msgg, "확인");
+
+                            }
+                            if (OrderView.InCustomID != txtInCustom.Tag.ToString())
+                            {
+                                msgg = "해당 수주번호로 출고이력이\n있으므로 최종거래처를 변경 할 수 없습니다.";
+                                MessageBox.Show(msgg, "확인");
+
+                            }
+                            if(msgg.Length > 2)
+                            {
+                                flag = false;
+                                return flag;
+                            }
+                        }
+
+                    }
+                    else if (dt.Rows.Count > 0)
                     {
                         sql = "select OrderID from OutWare where OrderID = " + OrderView.OrderID;
 
