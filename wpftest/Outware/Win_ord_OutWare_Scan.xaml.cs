@@ -769,7 +769,7 @@ namespace WizMes_HanMin
             {
                 if (e.Key == Key.Enter)
                 {
-                    pf.ReturnCode(txtOrderID, 4, "");
+                    pf.ReturnCode(txtOrderID, 99, "");
 
                     if (txtOrderID.Text.Length > 0)
                     {
@@ -927,7 +927,7 @@ namespace WizMes_HanMin
         {
             try
             {
-                pf.ReturnCode(txtOrderID, 4, "");
+                pf.ReturnCode(txtOrderID, 99, "");
 
                 if (txtOrderID.Text.Length > 0)
                 {

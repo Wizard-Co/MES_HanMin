@@ -768,7 +768,7 @@
                                     Style="{DynamicResource LabelInputArea}">
                                 <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
 
-                                    <TextBlock Text="매출거래처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
+                                    <TextBlock Text="최종거래처"  Style="{DynamicResource TextBlockInViewBoxInput}"/>
                                 </Viewbox>
                             </Label>
                             <TextBox x:Name="txtInCustom" Grid.Row="7" Grid.Column="1" Text="{Binding KInCustom}" 
