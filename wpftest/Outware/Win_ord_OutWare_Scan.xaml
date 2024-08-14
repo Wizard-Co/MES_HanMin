@@ -826,16 +826,18 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="txtQty" Width="auto"  Foreground="Black" MinWidth="50"
-                                         Text="{Binding OutQty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                                               HorizontalAlignment="Right" 
+                                         Text="{Binding OutQty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"                       
+                                                TextAlignment="Right"
+                                               VerticalAlignment="Center"
                                                KeyDown="txtQty_KeyDown" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <TextBox x:Name="DataGridTextBoxColorQty" Text="{Binding OutQty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
-                                               Foreground="Black" Width="auto"  MinWidth="50"
-                                               HorizontalAlignment="Right"
+                                               Foreground="Black" Width="auto"  MinWidth="50"                                
+                                                TextAlignment="Right"
+                                        
                                                KeyDown="txtQty_KeyDown"
                                                PreviewTextInput="DataGridTextBoxColorQty_PreviewTextInput" TextChanged="DataGridTextBoxColorQty_TextChanged"></TextBox>
                                 </DataTemplate>

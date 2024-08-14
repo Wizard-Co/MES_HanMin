@@ -340,7 +340,7 @@
                 <ComboBox x:Name="cboRegularGbnSrh" Grid.Column="1" Background="White" IsEnabled="False" Style="{DynamicResource ComboBoxSearchString}"/>
             </Grid>
             
-            <Grid Grid.Column="3" Grid.Row="0">
+            <Grid Grid.Column="3" Grid.Row="0" Visibility="Hidden">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
@@ -350,7 +350,7 @@
                     <Viewbox  Style="{DynamicResource ViewBoxSetMaxMinHeight}" >
                         <CheckBox x:Name="chkRemainAddSrh"/>
                     </Viewbox>
-                    <Viewbox  Style="{DynamicResource ViewBoxSetMaxMinHeight}" >
+                    <Viewbox  Style="{DynamicResource ViewBoxSetMaxMinHei00002ght}" >
                         <TextBlock Text="LOTNO 유지추가"  Style="{DynamicResource TextBlockInViewBoxSearch}"/>
                     </Viewbox>
                 </StackPanel>

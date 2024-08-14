@@ -32,6 +32,7 @@ namespace WizMes_HanMin
         public static string CurrentPerson = string.Empty;
         public static string CurrentPersonID = string.Empty;
         public static double StdFontSize = 0;
+        public static sbyte sbyteCancel = 0;
 
         public int TheFont { get; set; }
         public double TheHeight { get; set; }

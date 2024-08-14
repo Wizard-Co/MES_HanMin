@@ -9,8 +9,22 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WizMes_HanMin.PopUP;
 using WPF.MDI;
+
+/**************************************************************************************************
+'** 프로그램명 : Win_Qul_InspectAuto_U
+'** 설명       : 검사실적 등록
+'** 작성일자   : 2024.08.14
+'** 작성자     : 최대현
+'**------------------------------------------------------------------------------------------------
+'**************************************************************************************************
+' 변경일자  , 변경자, 요청자    , 요구사항ID      , 요청 및 작업내용
+'**************************************************************************************************
+' 2024.08.14 기존 lotid검색시 자동 마지막 공정, 지시, 입고, 출고를 가져오는 것 대신 플러스파인더로
+             선택하여 가져올수 있도록 변경
+'**************************************************************************************************/
 
 namespace WizMes_HanMin
 {
@@ -153,6 +167,7 @@ namespace WizMes_HanMin
             this.cboResultSrh.ItemsSource = ovcDefectYN;
             this.cboResultSrh.DisplayMemberPath = "code_name";
             this.cboResultSrh.SelectedValuePath = "code_id";
+            this.cboResultSrh.SelectedIndex = 0;
 
             this.cboDefectYN.ItemsSource = ovcDefectYN;
             this.cboDefectYN.DisplayMemberPath = "code_name";
@@ -223,6 +238,8 @@ namespace WizMes_HanMin
                 cboProcess.Visibility = Visibility.Hidden;
                 lblMachine.Visibility = Visibility.Hidden;
                 cboMachine.Visibility = Visibility.Hidden;
+
+                FillGrid();
             }
             else
             {
@@ -252,8 +269,7 @@ namespace WizMes_HanMin
                 lblMachine.Visibility = Visibility.Visible;
                 cboMachine.Visibility = Visibility.Visible;
 
-
-
+                FillGrid();
 
             }
             else
@@ -284,6 +300,8 @@ namespace WizMes_HanMin
                 cboProcess.Visibility = Visibility.Visible;
                 lblMachine.Visibility = Visibility.Visible;
                 cboMachine.Visibility = Visibility.Visible;
+
+                FillGrid();
             }
             else
             {
@@ -316,6 +334,8 @@ namespace WizMes_HanMin
                 cboProcess.Visibility = Visibility.Hidden;
                 lblMachine.Visibility = Visibility.Hidden;
                 cboMachine.Visibility = Visibility.Hidden;
+
+                FillGrid();
             }
             else
             {
@@ -1379,8 +1399,8 @@ namespace WizMes_HanMin
                                 SumInspectQty = dr["SumInspectQty"].ToString(),
                                 SumDefectQty = dr["SumDefectQty"].ToString(),
                                 INOUTCustomID = "",
-                                InOutCustom = "",
-                                INOUTCustomDate = ""
+                                InOutCustom = "",                                
+                                INOUTCustomDate = strPoint == "1" ? dr["InpDate"].ToString() : dr["OutDate"].ToString()
                             };
 
                             //if (WinQulInsAuto.SumInspectQty.Trim().Length > 0 && lib.IsNumOrAnother(WinQulInsAuto.SumInspectQty.Trim()))
@@ -1409,7 +1429,7 @@ namespace WizMes_HanMin
                                 {
                                     WinQulInsAuto.INOUTCustomID = WinQulInsAuto.InpCustomID;
                                     WinQulInsAuto.InOutCustom = WinQulInsAuto.InpCustomName;
-                                    WinQulInsAuto.INOUTCustomDate = WinQulInsAuto.InpDate_CV;
+                                    dtpInOutDate.SelectedDate = lib.strConvertDate(WinQulInsAuto.INOUTCustomDate.Trim());
                                 }
                             }
                             else if (strPoint.Equals("5"))
@@ -1418,7 +1438,7 @@ namespace WizMes_HanMin
                                 {
                                     WinQulInsAuto.INOUTCustomID = WinQulInsAuto.OutCustomID;
                                     WinQulInsAuto.InOutCustom = WinQulInsAuto.OutCustomName;
-                                    WinQulInsAuto.INOUTCustomDate = WinQulInsAuto.OutDate_CV;
+                                    dtpInOutDate.SelectedDate = lib.strConvertDate(WinQulInsAuto.INOUTCustomDate.Trim());
                                 }
                             }
                             
@@ -1455,7 +1475,11 @@ namespace WizMes_HanMin
                     txtArticleName.Tag = WinInsAuto.ArticleID;
                     
                     this.DataContext = WinInsAuto;
-
+                    
+                    if(WinInsAuto.INOUTCustomDate.Trim() != "")
+                    {
+                        dtpInOutDate.SelectedDate = lib.strConvertDate(WinInsAuto.INOUTCustomDate.Trim());
+                    }
 
                     SetEcoNoCombo(WinInsAuto.ArticleID, strPoint);
 
@@ -3851,25 +3875,55 @@ namespace WizMes_HanMin
         {
             if (e.Key == Key.Enter)
             {
-                GetLotID(txtLotNO.Text, strPoint);
+
+                int large = 0;
+                switch (strPoint)
+                {
+                    case "1": large = 102; break;
+                    case "3": large = 103; break;
+                    case "9": large = 103; break;
+                    case "5": large = 104; break;
+                }
+
+                MainWindow.pf.ReturnCode(txtLotNO, large, txtLotNO.Text);
+
+                if (!string.IsNullOrEmpty(txtLotNO.Text))
+                    GetLotID(txtLotNO.Text, strPoint);
+                if(string.IsNullOrEmpty(txtLotNO.Text) && strPoint == "5" && MainWindow.sbyteCancel != 1) 
+                    GetLotID(txtLotNO.Text, strPoint);
+
+                #region ...
+                //GetLotID(txtLotNO.Text, strPoint);
 
                 //if (txtArticleName.Tag != null)
                 //{
                 //    SetEcoNoCombo(txtArticleName.Tag.ToString(), strPoint);
                 //}
-                
-            }            
+                #endregion
+
+            }
         }
 
         //
         private void btnPfLotNO_Click(object sender, RoutedEventArgs e)
         {
-            GetLotID(txtLotNO.Text, strPoint);
+            var keyEventArgs = new KeyEventArgs(
+                                                 Keyboard.PrimaryDevice, //이벤트 발생시키는 키보드는?(사용자 주 키보드)
+                                                 Keyboard.PrimaryDevice.ActiveSource, //이벤트 소스
+                                                 0, //이벤트 발생시각 특별한 경우 아니면 0
+                                                 Key.Enter //누른 키
+                                                 );
+            txtLotNO_KeyDown(null, keyEventArgs);
+
+
+            #region ...
+            //GetLotID(txtLotNO.Text, strPoint);
 
             //if (txtArticleName.Tag != null)
             //{
             //    SetEcoNoCombo(txtArticleName.Tag.ToString(), strPoint);
             //}
+            #endregion
         }
 
         //
@@ -3906,21 +3960,24 @@ namespace WizMes_HanMin
                             lotid = dr["lotid"].ToString()
                         };
 
-                        //품명란에 품번으로 수정요청함 2020.03.19, 장가빈
-                        txtArticleName.Text = LotInfo.BuyerArticleNo;
+                        
+                        txtArticleName.Text = LotInfo.Article;
                         txtArticleName.Tag = LotInfo.ArticleID;
                         txtInOutCustom.Text = LotInfo.Custom;
-                        txtInOutCustom.Tag = LotInfo.CustomID;
-                        //LOTID 안땡겨와서 추가함
+                        txtInOutCustom.Tag = LotInfo.CustomID;                    
                         txtLotNO.Text = LotInfo.lotid;
 
                         if (LotInfo.InoutDate.Replace(" ", "").Length > 0)
                         {
+                            //8자리 날짜를 datetime으로 바꿔줌
                             dtpInOutDate.SelectedDate = lib.strConvertDate(LotInfo.InoutDate);
                         }
 
                         if (txtArticleName.Tag != null && !txtArticleName.Tag.ToString().Equals(""))
                         {
+                            //SetEcoNoCombo()로 업데이트 되면서
+                            //cboEcoNO_SelectionChanged()가 따라서 실행되며
+                            //SelectionChanged()이벤트에 검사기준을 로드하는 이벤트가 있음
                             SetEcoNoCombo(txtArticleName.Tag.ToString(), Point);
                             GetArticelData(txtArticleName.Tag.ToString());
 
@@ -4984,7 +5041,45 @@ namespace WizMes_HanMin
             cboRegularGbnSrh.IsEnabled = false;
         }
 
-        
+
+
+
+        //남아있는 데이터로 오류 방지 입력칸 비우기
+        private void ClearInputGrid()
+        {
+            //여기에 비우고자 하는 그리드를 파라미터로 적어주세요
+            ClearTextLabel(grdInput);
+        }
+
+        //UI컨트롤을 찾아 해당하는 요소가 있으면 내용을 비움
+        private void ClearTextLabel(DependencyObject parent)
+        {
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+
+            for (int i = 0; i < childCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is TextBox textBox)
+                {
+                    // TextBox를 찾으면 Text 속성을 빈 문자열로 설정
+                    textBox.Text = string.Empty;
+                    textBox.Tag = null;
+                }
+                if (child is ComboBox comboBox)
+                {
+                    //콤보박스 선택값 비워줌
+                    comboBox.SelectedValue = "";
+                }
+                else
+                {
+                    // 자식이 TextBox가 아니면 재귀적으로 그 자식의 자식들을 탐색
+                    ClearTextLabel(child);
+                }
+            }
+        }
+
+
     }
 
     class Win_Qul_InspectAuto_U_CodeView : BaseView

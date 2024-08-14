@@ -505,6 +505,7 @@ namespace WizMes_HanMin
                 txtBox.Text = colName;
                 txtBox.Tag = colID;
 
+                MainWindow.sbyteCancel = 0;
                 this.DialogResult = DialogResult.HasValue;
                 this.Close();
             }
@@ -610,6 +611,7 @@ namespace WizMes_HanMin
         {
             txtBox.Text = string.Empty;
             txtBox.Tag = null;
+            MainWindow.sbyteCancel = 1;
             this.Close();
         }
 

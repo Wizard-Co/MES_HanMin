@@ -271,21 +271,21 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="공정라벨" Width="*" >
+                    <DataGridTemplateColumn Header="공정라벨" Width="*"  Visibility="Hidden">
                         <DataGridTemplateColumn.CellTemplate >
                             <DataTemplate>
                                 <TextBlock Text="{Binding LabelID}" TextAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="자재라벨" Width="*" >
+                    <DataGridTemplateColumn Header="자재라벨" Width="*" Visibility="Hidden">
                         <DataGridTemplateColumn.CellTemplate >
                             <DataTemplate>
                                 <TextBlock Text="{Binding ChildLabelID}" TextAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="작업자" Width="*">
+                    <DataGridTemplateColumn Header="작업자" Width="*" Visibility="Hidden">
                         <DataGridTemplateColumn.CellTemplate >
                             <DataTemplate>
                                 <TextBlock Text="{Binding WorkPersonName}" TextAlignment="Center"/>
@@ -302,7 +302,7 @@
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="총 발생수량" Width="*" Binding="{Binding Path=DefectQty}" CellStyle="{StaticResource NumericDataGridCell}"  />
+                    <DataGridTextColumn Header="총 발생수량" Width="*" Binding="{Binding Path=DefectQty}" CellStyle="{StaticResource DataGridCellAndCentering}"  />
                 </DataGrid.Columns>
             </DataGrid>
            

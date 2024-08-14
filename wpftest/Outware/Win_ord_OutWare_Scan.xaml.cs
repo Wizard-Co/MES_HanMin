@@ -1020,6 +1020,7 @@ namespace WizMes_HanMin
                             //label.Orderseq = orderSeq;
                             label.OutQty = stringFormatN0(txtScanData.Text);
                             label.UnitPrice = "0";
+                            label.ArticleID = txtArticleID_InGroupBox.Text;
                             dgdOutwareSub.Items.Add(label);
 
                             // 데이터 그리드 등록 후 바코드 초기화
@@ -1033,6 +1034,7 @@ namespace WizMes_HanMin
                     }
                     else
                     {
+                        if(txtOrderID.Text == string.Empty || txtOrderID.Text == "")
                         MessageBox.Show("관리번호를 먼저 검색하여 주십시오.","확인");
                     }
 
@@ -1120,7 +1122,7 @@ namespace WizMes_HanMin
                 sqlParameter.Clear();
                 sqlParameter.Add("BoxID", ScanData);
 
-                DataSet ds = DataStore.Instance.ProcedureToDataSet("xp_Outware_sBoxIDOne_20200727_test", sqlParameter, false); ////// 2020.01.20 장가빈, wk_packing 테이블
+                DataSet ds = DataStore.Instance.ProcedureToDataSet("xp_Outware_sBoxIDOne_New", sqlParameter, false); ////// 2020.01.20 장가빈, wk_packing 테이블
                 if (ds != null && ds.Tables.Count > 0)
                 {
                     DataTable dt = null;
@@ -1230,6 +1232,7 @@ namespace WizMes_HanMin
                             Vat_IND_YN = DR["VAT_IND_YN"].ToString(),    //부가세별도여부
                             LabelGubun = DR["labelGubun"].ToString(),    //라벨구분
                             Article = DR["Article"].ToString(),          //품명           
+                            ArticleID = DR["ArticleID"].ToString(),
 
                             DeleteYN = "Y",
                         };
@@ -1697,6 +1700,7 @@ namespace WizMes_HanMin
 
                             sqlParameter.Add("LotNo", "0");
                             sqlParameter.Add("Gubun", "");              //용도를 몰라서 빈값
+                            sqlParameter.Add("ArticleID", OutwareSub.ArticleID);
                             sqlParameter.Add("StuffQty", 0);
                             sqlParameter.Add("OutQty", OutwareSub.OutQty.Replace(",", ""));
                             sqlParameter.Add("OutRoll", 1); // 하나당 박스 1개로 처리 하니, 1로 저장한다고 함

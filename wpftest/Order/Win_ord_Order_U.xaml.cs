@@ -63,7 +63,7 @@ namespace WizMes_HanMin
             SetComboBox();
 
             txtOrderCount.Text = "0 건";
-            txtOrderYds.Text = "0 YDS";
+            txtOrderYds.Text = "";
 
             if (MainWindow.tempContent != null
                 && MainWindow.tempContent.Count > 0)

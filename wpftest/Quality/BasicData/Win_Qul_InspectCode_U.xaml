@@ -177,7 +177,8 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <GroupBox x:Name="gbxOne" Grid.Row="0" IsHitTestVisible="False">
+                        <GroupBox x:Name="gbxOne" Grid.Row="0" 
+                                  IsHitTestVisible="False" Background="#F0F0F0">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20*"/>
@@ -294,7 +295,7 @@
                             </Grid>
                         </GroupBox>
 
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="1" Background="#F0F0F0">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="27*"/>
