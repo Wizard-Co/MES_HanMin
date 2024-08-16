@@ -1289,22 +1289,22 @@ namespace WizMes_HanMin
 
                     e.Handled = true;
 
-                    if (txtSupplierName.Tag == null || txtSupplierName.Tag.ToString().Trim().Equals("")
-                 || txtSupplierName.Text.Trim().Equals(""))
-                    {
-                        MessageBox.Show("거래처를 먼저 선택해주세요.");
-                        return;
-                    }
+                 //   if (txtSupplierName.Tag == null || txtSupplierName.Tag.ToString().Trim().Equals("")
+                 //|| txtSupplierName.Text.Trim().Equals(""))
+                 //   {
+                 //       MessageBox.Show("거래처를 먼저 선택해주세요.");
+                 //       return;
+                 //   }
 
-                    if (txtSupplierName != null && txtSupplierName.Text != "")
-                    {
+                    //if (txtSupplierName != null && txtSupplierName.Text != "")
+                    //{
                         // MainWindow.pf.ReturnCode(tb, 80, OcReqSub.Item_Name == null ? "" : OcReqSub.Item_Name);
-                        MainWindow.pf.ReturnCode(tb, 7070, txtSupplierName.Tag.ToString().Trim());
-                    }
-                    else
-                    {
-                        MainWindow.pf.ReturnCode(tb, 7071, "");
-                    }
+                        MainWindow.pf.ReturnCode(tb, 1, "");
+                    //}
+                    //else
+                    //{
+                    //    MainWindow.pf.ReturnCode(tb, 7071, "");
+                    //}
                     ////MainWindow.pf.ReturnCode(tb, 80, OcReqSub.Item_Name == null ? "" : OcReqSub.Item_Name);
                     //MainWindow.pf.ReturnCode(tb, 80, txtSupplierName.Tag.ToString().Trim());
 
@@ -1353,22 +1353,22 @@ namespace WizMes_HanMin
                     //MainWindow.pf.ReturnCode(tb, 76, OcReqSub.BuyerArticleNo == null ? "" : OcReqSub.BuyerArticleNo);
                     e.Handled = true;
 
-                    if (txtSupplierName.Tag == null || txtSupplierName.Tag.ToString().Trim().Equals("")
-                 || txtSupplierName.Text.Trim().Equals(""))
-                    {
-                        MessageBox.Show("거래처를 먼저 선택해주세요.");
-                        return;
-                    }
+                 //   if (txtSupplierName.Tag == null || txtSupplierName.Tag.ToString().Trim().Equals("")
+                 //|| txtSupplierName.Text.Trim().Equals(""))
+                 //   {
+                 //       MessageBox.Show("거래처를 먼저 선택해주세요.");
+                 //       return;
+                 //   }
 
-                    if (txtSupplierName != null && txtSupplierName.Text != "")
-                    {
+                    //if (txtSupplierName != null && txtSupplierName.Text != "")
+                    //{
                         // MainWindow.pf.ReturnCode(tb, 80, OcReqSub.Item_Name == null ? "" : OcReqSub.Item_Name);
-                        MainWindow.pf.ReturnCode(tb, 7070, txtSupplierName.Tag.ToString().Trim());
-                    }
-                    else
-                    {
-                        MainWindow.pf.ReturnCode(tb, 7071, "");
-                    }
+                        MainWindow.pf.ReturnCode(tb, 7070, "");
+                    //}
+                    //else
+                    //{
+                    //    MainWindow.pf.ReturnCode(tb, 7071, "");
+                    //}
                     ////MainWindow.pf.ReturnCode(tb, 80, OcReqSub.Item_Name == null ? "" : OcReqSub.Item_Name);
                     //MainWindow.pf.ReturnCode(tb, 80, txtSupplierName.Tag.ToString().Trim());
 
