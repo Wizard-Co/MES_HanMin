@@ -935,7 +935,7 @@
                             </Label>
 
                             <DatePicker x:Name="dtpInOutDate" Grid.Column="7" Grid.Row="2" Style="{DynamicResource DatePickerInputArea}" 
-                                        SelectedDate="{Binding INOUTCustomDate}" Grid.ColumnSpan="2"/>
+                                        SelectedDate="{Binding INOUTCustomDate}" Grid.ColumnSpan="2" IsHitTestVisible="False"/>
                            
                             <Label Grid.Column="0" Grid.Row="4" HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center" Style="{DynamicResource LabelInputArea}" >
