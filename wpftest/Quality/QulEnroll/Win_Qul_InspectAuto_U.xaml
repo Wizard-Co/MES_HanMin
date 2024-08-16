@@ -350,7 +350,7 @@
                     <Viewbox  Style="{DynamicResource ViewBoxSetMaxMinHeight}" >
                         <CheckBox x:Name="chkRemainAddSrh"/>
                     </Viewbox>
-                    <Viewbox  Style="{DynamicResource ViewBoxSetMaxMinHei00002ght}" >
+                    <Viewbox  Style="{DynamicResource ViewBoxSetMaxMinHeight}" >
                         <TextBlock Text="LOTNO 유지추가"  Style="{DynamicResource TextBlockInViewBoxSearch}"/>
                     </Viewbox>
                 </StackPanel>
