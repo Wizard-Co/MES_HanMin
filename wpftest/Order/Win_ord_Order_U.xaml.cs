@@ -916,7 +916,7 @@ namespace WizMes_HanMin
                     if (List_cannot_delete.Count > 0)
                     {
                         string msg = "삭제 할 수 없는 수주가 있습니다.\n" + string.Join("\n", List_cannot_delete);
-                        MessageBox.Show(msg);
+                        MessageBox.Show(msg, "확인");
                         MessageBoxResult msgresult = MessageBox.Show("삭제 할 수 없는 건은 제외하고 삭제 하시겠습니까?", "삭제 확인", MessageBoxButton.YesNo);
                         if (msgresult == MessageBoxResult.Yes)
                         {
