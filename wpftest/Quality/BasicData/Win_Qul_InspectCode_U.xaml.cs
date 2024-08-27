@@ -158,12 +158,15 @@ namespace WizMes_HanMin
         {
             try
             {
+                string strUseClss = chkUseClssSrh.IsChecked == true ? "Y" : "N";
+                if (strUseClss != "Y" && strUseClss != "N") strUseClss = "N";
+
                 DataStore.Instance.InsertLogByForm(this.GetType().Name, "R");
                 ovcDefect.Clear();
                 ovcBasis.Clear();
                 ovcGrade.Clear();
 
-                DataTable dtOne = Procedure.Instance.GetDefect();
+                DataTable dtOne = Procedure.Instance.GetDefect(strUseClss);
                 DataTable dtTwo = Procedure.Instance.GetBasis();
                 DataTable dtThree = Procedure.Instance.GetGrade();
 
@@ -185,8 +188,12 @@ namespace WizMes_HanMin
                             TagName = dr["TagName"].ToString(),
                             DefectClss = dr["DefectClss"].ToString(),
                             DefectClssSub = dr["DefectClssSub"].ToString(),
-                            ButtonSeq = dr["ButtonSeq"].ToString()
+                            ButtonSeq = dr["ButtonSeq"].ToString(),
+                            UseClss = dr["UseClss"].ToString().Trim(),
                         };
+
+                        if (WinOne.UseClss == "*") { chkUseClss.IsChecked = true; WinOne.FontColor_UseClssN = true; }
+                        else { chkUseClss.IsChecked = false; WinOne.FontColor_UseClssN = false; }
 
                         ovcDefect.Add(WinOne);
                         i++;
@@ -534,12 +541,15 @@ namespace WizMes_HanMin
         /// </summary>
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            DataStore.Instance.InsertLogByForm(this.GetType().Name, "D");
+
             string strID = string.Empty;
+            string strUseClss = string.Empty;
+
             if (tabOne.IsSelected == true)
             {
                 var Item = dgdOne.SelectedItem as Win_Qul_InspectCode_U_Defect_CodeView;
-                if (Item != null)
-                    strID = Item.DefectID;
+                if (Item != null) { strID = Item.DefectID; strUseClss = Item.UseClss; };
             }
             else if (tabTwo.IsSelected == true)
             {
@@ -562,7 +572,7 @@ namespace WizMes_HanMin
                     Wh_Ar_SelectedLastIndex = dgdOne.SelectedIndex;
                 }
 
-                if (DeleteData(strID))
+                if (DeleteData(strID, strUseClss))
                 {
                     Wh_Ar_SelectedLastIndex -= 1;
                     btnSearch_Click(null, null);
@@ -940,6 +950,7 @@ namespace WizMes_HanMin
             {
                 tabOne.DataContext = One;
                 SEQCheck = One.ButtonSeq;
+                chkUseClss.IsChecked = (One.UseClss.Trim() == "*");
             }
 
             // one이 잘 보인다면, 공정별 불량유형 (선택대상)을 뿌려줘야지.
@@ -1010,17 +1021,38 @@ namespace WizMes_HanMin
         /// <summary>
         /// 실삭제
         /// </summary>
-        private bool DeleteData(string strID)
+        private bool DeleteData(string strID, string strUseClss)
         {
             bool flag = false;
 
             try
             {
-                DataStore.Instance.InsertLogByForm(this.GetType().Name, "E");
-
                 if (tabOne.IsSelected == true)
                 {
-                    flag = Procedure.Instance.DeleteData(strID, "DefectID", "xp_Defect_dDefect");
+                    if (strUseClss == "*")
+                    {
+                        if (CheckDelete(strID))
+                        {
+                            Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
+                            sqlParameter.Clear();
+                            sqlParameter.Add("DefectID", strID);
+
+                            string[] result = DataStore.Instance.ExecuteProcedure("xp_Defect_dDefect_Completely", sqlParameter, true);
+
+                            if (result[0].Equals("success"))
+                            {
+                                flag = true;
+                                MessageBox.Show("선택한 불량코드를 삭제 했습니다.");
+                            }
+                            else
+                            {
+                                MessageBox.Show("완전 삭제 중 오류 :" + result[0].ToString());
+                            }
+                        }
+                    }
+
+                    else flag = Procedure.Instance.DeleteData(strID, "DefectID", "xp_Defect_dDefect");
+
                 }
                 else if (tabTwo.IsSelected == true)
                 {
@@ -1030,7 +1062,7 @@ namespace WizMes_HanMin
                     sqlParameter.Add("sCodeID", "BasisID");
                     sqlParameter.Add("sID", strID);
 
-                    string[] result = DataStore.Instance.ExecuteProcedure("xp_Code_dCode", sqlParameter , false);
+                    string[] result = DataStore.Instance.ExecuteProcedure("xp_Code_dCode", sqlParameter, true);
 
                     if (result[0].Equals("success"))
                     {
@@ -1050,6 +1082,33 @@ namespace WizMes_HanMin
             finally
             {
                 DataStore.Instance.CloseConnection();
+            }
+
+            return flag;
+        }
+
+        private bool CheckDelete(string strID)
+        {
+            bool flag = false;
+
+            MessageBoxResult msgresult = MessageBox.Show("사용안함 코드입니다. 시스템에서 완전 삭제 하시겠습니까?", "삭제 확인", MessageBoxButton.YesNo);
+            if (msgresult == MessageBoxResult.Yes)
+            {
+                Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
+                sqlParameter.Clear();
+                sqlParameter.Add("sDefectID", strID);
+
+                string[] result = DataStore.Instance.ExecuteProcedure("xp_Defect_dDefect_Check", sqlParameter, true);
+
+                if (result[0].Equals("success") && result[1].Equals(""))
+                {
+                    flag = true;
+                }
+                else
+                {
+                    MessageBox.Show(result[1]);
+                }
+
             }
 
             return flag;
@@ -1083,6 +1142,7 @@ namespace WizMes_HanMin
                         sqlParameter.Add("TagName", txtTagName.Text);
                         sqlParameter.Add("KindID", cboDefect.SelectedValue != null ? cboDefect.SelectedValue.ToString() : "");
                         sqlParameter.Add("KindIDSub", cboSebuDefect.SelectedValue != null ? cboSebuDefect.SelectedValue.ToString() : "");
+                        sqlParameter.Add("chkUseClss", chkUseClss.IsChecked == true ? "*" : "");
 
                         if (strFlag.Equals("I"))
                         {
@@ -1434,6 +1494,17 @@ namespace WizMes_HanMin
             }
         }
 
+        private void lblUseClssSrh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (chkUseClssSrh.IsChecked == true)
+            {
+                chkUseClssSrh.IsChecked = false;
+            }
+            else
+            {
+                chkUseClssSrh.IsChecked = true;
+            }
+        }
 
 
         #region 포커스 이동용 키 다운 이벤트 모음
@@ -1513,5 +1584,7 @@ namespace WizMes_HanMin
                 dgs.FontSize = dgs.FontSize * c;
             }
         }
+
+
     }
 }

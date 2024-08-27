@@ -41,12 +41,35 @@
                 </Label>
                 <TextBox x:Name="txtCodeSrh" Grid.Column="1" TextChanged="TxtCodeSrh_TextChanged" Style="{DynamicResource TextBoxSearch_Q}" IsEnabled="True"/>
             </Grid>
+
+            <!--사용안함-->
+            <Grid Grid.Column="2" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75*" />
+                    <ColumnDefinition Width="90*" />
+                    <ColumnDefinition Width="15*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="lblUseClssSrh"
+                       Style="{DynamicResource LabelSearch}"
+                       MouseLeftButtonDown="lblUseClssSrh_MouseLeftButtonDown">
+                    <StackPanel Style="{DynamicResource StackPanelInLabel}">
+                        <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}" >
+                            <CheckBox x:Name="chkUseClssSrh" 
+                                      VerticalAlignment="Center" />
+                        </Viewbox>
+                        <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}" >
+                            <TextBlock Text="사용안함 포함" 
+                                       Style="{DynamicResource TextBlockInViewBoxSearch}"/>
+                        </Viewbox>
+                    </StackPanel>
+                </Label>
+            </Grid>
+
             <Grid Grid.Column="1" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="65*" />
                     <ColumnDefinition Width="85*" />
                 </Grid.ColumnDefinitions>
-
             </Grid>
 
             <Grid Grid.Column="4" Grid.Row="0" Grid.RowSpan="4" >
@@ -132,6 +155,18 @@
                     </Grid.ColumnDefinitions>
 
                     <DataGrid x:Name="dgdOne" Grid.Column="0" SelectionChanged="DgdOne_SelectionChanged" Style="{DynamicResource DataGridMultiLine}" >
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=FontColor_UseClssN}" Value="true">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=FontColor_UseClssN}" Value="false">
+                                        <Setter Property="Foreground" Value="Black" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="순번" Binding="{Binding Num}"/>
                             <DataGridTextColumn Header="코드" Binding="{Binding DefectID}"/>
@@ -292,6 +327,18 @@
                                 </Label>
                                 <ComboBox x:Name="cboSebuDefect" Grid.Column="1" Grid.Row="9" Style="{DynamicResource ComboBoxInputString_Q}"
                                       SelectedValue="{Binding DefectClssSub}" DropDownClosed="cboSebuDefect_DropDownClosed"/>
+
+                                <Label Grid.Column="3" Grid.Row="2" 
+                                       Style="{DynamicResource LabelInputArea_GB_Q}">
+                                    <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight_Q}" >
+                                        <TextBlock Text="사용 안함"   Style="{DynamicResource TextBlockInViewBoxInput_Q}" />
+                                    </Viewbox>
+                                </Label>
+                                <CheckBox x:Name="chkUseClss" Grid.Column="4" Grid.Row="2" Margin="0,5">
+                                    <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                    </CheckBox.LayoutTransform>
+                                </CheckBox>
                             </Grid>
                         </GroupBox>
 

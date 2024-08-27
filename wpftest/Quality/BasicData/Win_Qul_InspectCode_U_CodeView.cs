@@ -16,6 +16,8 @@
         public string DefectClssSub { get; set; }
 
         public string ButtonSeq { get; set; }
+        public string UseClss { get; set; }
+        public bool FontColor_UseClssN { get; set; }
     }
 
     class Win_Qul_InspectCode_U_Basic_CodeView : BaseView

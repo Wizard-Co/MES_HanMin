@@ -332,6 +332,10 @@ namespace WizMes_HanMin
             {
                 dgdMain.Items.Clear();
             }
+            if(dgdTotal.Items.Count > 0)
+            {
+                dgdTotal.Items.Clear();
+            }
 
             try
             {
