@@ -1378,6 +1378,8 @@
     <Resource Include="Images\x-bar.PNG" />
     <None Include="Resources\X-bar-Image.png" />
     <Resource Include="Images\icon_MES.JPG" />
+    <Resource Include="Resources\excel.png" />
+    <Resource Include="Resources\verification.png" />
     <Content Include="x64\liblept172.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

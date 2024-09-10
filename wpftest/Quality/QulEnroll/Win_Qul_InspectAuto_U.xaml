@@ -417,7 +417,17 @@
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
-                        
+                    <Button x:Name="btnUploadExcel" Grid.Column="0" Click="btnUploadExcel_Click" Margin="1">
+                        <StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="측정값"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="업로드"/>
+                            </StackPanel>
+                        </StackPanel>                        
+                    </Button>
+
                     <Button x:Name="btnSearch" Grid.Column="1" Click="btnSearch_Click" Margin="1">
                         <StackPanel Orientation="Horizontal" >
                             <Image Source="{DynamicResource btiSearch}" Style="{DynamicResource imgSize}" VerticalAlignment="Center"/>

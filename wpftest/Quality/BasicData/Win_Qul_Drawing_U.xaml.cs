@@ -243,6 +243,8 @@ namespace WizMes_HanMin
 
             dtpDrawAcptDate.SelectedDate = DateTime.Today;
             dtpDrawCreateDate.SelectedDate = DateTime.Today;
+            chkDrawCreateDate.IsChecked = true;
+            cboDrawAuthor.SelectedIndex = 0;
 
             txtArticle.Focus();
             //txtBuyerModel.Focus();

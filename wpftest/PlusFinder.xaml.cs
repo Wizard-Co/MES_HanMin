@@ -29,6 +29,10 @@ namespace WizMes_HanMin
             SetButton();
         }
 
+        // string 값을 받을 수 있는 이벤트
+        public delegate void RefEventHandler(string msg);
+        public event RefEventHandler refEvent;
+
         protected override void OnClosing(CancelEventArgs e1)
         {
             e1.Cancel = true;
@@ -466,6 +470,7 @@ namespace WizMes_HanMin
             }
             else
             {
+                MainWindow.sbyteCancel = 1;
                 MessageBox.Show("검색결과가 없습니다.");
             }
             
@@ -501,6 +506,19 @@ namespace WizMes_HanMin
                     colID = dataRow.Row.ItemArray[1].ToString();
                     colName = dataRow.Row.ItemArray[2].ToString();
                 }
+                if(mDataGrid.Columns.Count == 13)
+                {
+                    if (mDataGrid.Columns[4].Header.ToString() == "Seq")
+
+                     colID = dataRow.Row.ItemArray[0].ToString();
+                     colName = dataRow.Row.ItemArray[1].ToString();
+
+                    string OutSeq = dataRow.Row.ItemArray[4].ToString();
+                    string OutwareID = dataRow.Row.ItemArray[3].ToString();
+
+                    refEvent?.Invoke($"{OutSeq},{OutwareID}");
+                 
+                }            
 
                 txtBox.Text = colName;
                 txtBox.Tag = colID;
