@@ -878,7 +878,7 @@ namespace WizMes_HanMin
                                 SubSeq = dr["SubSeq"].ToString(),
                                 insType = dr["insType"].ToString(),
                                 insItemName = dr["insItemName"].ToString(),
-                                insRaSpec = dr["insRaSpec"].ToString(),
+                                insRaSpec = lib.returnNumericString(dr["insRaSpec"].ToString()),
                                 insRASpecMax = dr["insRASpecMax"].ToString(),
                                 InsRaSpecMin = dr["InsRaSpecMin"].ToString(),
                                 InsTPSpec = dr["InsTPSpec"].ToString(),

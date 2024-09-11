@@ -85,6 +85,12 @@
       <HintPath>Lib\DataGridExtensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net20\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=0e453835af4ee6ce, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\GalaSoft.MvvmLight.dll</HintPath>
@@ -94,6 +100,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\GalaSoft.MvvmLight.Extras.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -576,6 +585,9 @@
       <DependentUpon>Win_Qul_QulDefectGoal_U.xaml</DependentUpon>
     </Compile>
     <Compile Include="Quality\BasicData\Win_Qul_QulDefectGoal_U_CodeView.cs" />
+    <Compile Include="Quality\PopUp\ExcelToDB.xaml.cs">
+      <DependentUpon>ExcelToDB.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Quality\QulEnroll\Win_Qul_4MChange_U.xaml.cs">
       <DependentUpon>Win_Qul_4MChange_U.xaml</DependentUpon>
     </Compile>
@@ -1139,6 +1151,10 @@
     <Page Include="Quality\BasicData\Win_Qul_QulDefectGoal_U.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Quality\PopUp\ExcelToDB.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Quality\QulEnroll\Win_Qul_4MChange_U.xaml">
       <Generator>MSBuild:Compile</Generator>

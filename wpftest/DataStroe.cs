@@ -45,15 +45,15 @@ namespace WizMes_HanMin
         //private string ConnectionString = "Data Source=wizis.iptime.org,20140;Initial Catalog=MES_HanMin;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
         //private string LogConnectionString = "Data Source=wizis.iptime.org,20140;Initial Catalog=WizLog;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
 
-        private string ConnectionString = "Data Source=wizis.iptime.org,20220;Initial Catalog=MES_HanMin;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
-        private string LogConnectionString = "Data Source=wizis.iptime.org,20220;Initial Catalog=WizLog;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
+        //private string ConnectionString = "Data Source=wizis.iptime.org,20220;Initial Catalog=MES_HanMin;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
+        //private string LogConnectionString = "Data Source=wizis.iptime.org,20220;Initial Catalog=WizLog;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
 
 
         //private string ConnectionString = "Data Source=WIN-P0LPFI4VHPU;Initial Catalog=MES_HanMin;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
         //private string LogConnectionString = "Data Source=WIN-P0LPFI4VHPU;Initial Catalog=WizLog;UID=DBUser;PWD=Wizardis; Connection Timeout=180";
 
-        //private string ConnectionString = "Data Source=" + LoadINI.server + ";Initial Catalog=" + LoadINI.Database + ";UID=DBUser;PWD=Wizardis; Connection Timeout= 0";
-        //private string LogConnectionString = "Data Source=" + LoadINI.server + ";Initial Catalog=WizLog;UID=DBUser;PWD=Wizardis; Connection Timeout= 0";
+        private string ConnectionString = "Data Source=" + LoadINI.server + ";Initial Catalog=" + LoadINI.Database + ";UID=DBUser;PWD=Wizardis; Connection Timeout= 0";
+        private string LogConnectionString = "Data Source=" + LoadINI.server + ";Initial Catalog=WizLog;UID=DBUser;PWD=Wizardis; Connection Timeout= 0";
 
         private string ZipConnectionString = "Data Source=wizis.iptime.org,1433;Initial Catalog=ZipDB;UID= wizard;PWD=wizard2013; Connection Timeout= 0";
         
@@ -298,6 +298,36 @@ namespace WizMes_HanMin
             //    }
             //}
         }
+
+        public string QueryToString(string queryString)
+        {
+            try
+            {
+                if (p_Connection.State == ConnectionState.Closed)
+                {
+                    p_Connection.Open();
+                }
+          
+                p_Command.CommandType = CommandType.Text;
+                p_Command.CommandText = queryString;
+      
+                string retVal = (p_Command.ExecuteScalar()?.ToString()) ?? string.Empty;
+
+                return retVal;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (p_Connection.State != ConnectionState.Closed)
+                {
+                    p_Connection.Close();
+                }
+            }
+        }
+
 
         public object QueryToScalar(string queryString)
         {
@@ -593,6 +623,20 @@ namespace WizMes_HanMin
             return value;
         }
 
+        public string ExecSQLgetString(string sql, bool logOn)
+        {
+            if (logOn == true)
+            {
+                // DB Log를 남긴다.
+                InsertTrxLog(new System.Diagnostics.StackTrace(1, false).GetFrame(0).GetMethod(), sql);
+            }
+
+            string value = QueryToString(sql);
+
+            return value;
+        }
+
+
         public object ExecuteScalar(string sql, bool logOn)
         {
             if (logOn == true)
@@ -655,6 +699,50 @@ namespace WizMes_HanMin
             }
 
         }
+
+        //DELETE, UPDATE 용도
+        public string[] ExecuteNonQuery(string queryString, bool logOn)
+        {
+            SqlTransaction transaction = null;
+
+            try
+            {
+                if (p_Connection.State == ConnectionState.Closed)
+                {
+                    p_Connection.Open();
+                }
+
+                if (logOn)
+                {
+                    InsertTrxLog(new System.Diagnostics.StackTrace(1, false).GetFrame(0).GetMethod(), queryString);
+                }
+
+                p_Command.CommandText = queryString;
+                p_Command.CommandType = CommandType.Text;
+
+                transaction = p_Connection.BeginTransaction();
+                p_Command.Transaction = transaction;
+
+                int affectedRows = p_Command.ExecuteNonQuery();  // ExecuteNonQuery() 사용
+
+                transaction.Commit();
+
+                return new string[] { Resources.success, affectedRows.ToString() };
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                return new string[] { Resources.failure, ex.Message };
+            }
+            finally
+            {
+                // if (p_Connection.State != ConnectionState.Closed)
+                // {
+                //     p_Connection.Close();
+                // }
+            }
+        }
+
 
         public string[] ExecuteProcedure(string procedureName, Dictionary<string, object> sqlParameter, bool logOn)
         {

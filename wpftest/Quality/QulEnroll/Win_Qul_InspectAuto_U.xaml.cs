@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WizMes_HanMin.PopUP;
 using WPF.MDI;
+using WizMes_HanMin.Quality.PopUp;
 
 /**************************************************************************************************
 '** 프로그램명 : Win_Qul_InspectAuto_U
@@ -1410,7 +1410,7 @@ namespace WizMes_HanMin
                                 InspectLevel = dr["InspectLevel"].ToString(),
                                 InspectLevelName = dr["InspectLevelName"].ToString(),
                                 InspectPoint = dr["InspectPoint"].ToString(),
-                                InspectQty = dr["InspectQty"].ToString(),
+                                InspectQty = lib.returnNumericString(dr["InspectQty"].ToString()),
                                 InspectUserID = dr["InspectUserID"].ToString(),
                                 IRELevel = dr["IRELevel"].ToString(),
                                 IRELevelName = dr["IRELevelName"].ToString(),
@@ -1598,19 +1598,19 @@ namespace WizMes_HanMin
                                 SubSeq = dr["SubSeq"].ToString(),
                                 insType = dr["insType"].ToString(),
                                 insItemName = dr["insItemName"].ToString(),
-                                SpecMin = lib.returnNumStringTwo(dr["SpecMin"].ToString()),
-                                SpecMax = lib.returnNumStringTwo(dr["SpecMax"].ToString()),
+                                SpecMin = lib.returnNumStringAll(dr["SpecMin"].ToString()),
+                                SpecMax = lib.returnNumStringAll(dr["SpecMax"].ToString()),
                                 InsSampleQty = dr["InsSampleQty"].ToString(),
-                                InspectValue1 = lib.returnNumStringTwo(dr["InspectValue1"].ToString()),
-                                InspectValue2 = lib.returnNumStringTwo(dr["InspectValue2"].ToString()),
-                                InspectValue3 = lib.returnNumStringTwo(dr["InspectValue3"].ToString()),
-                                InspectValue4 = lib.returnNumStringTwo(dr["InspectValue4"].ToString()),
-                                InspectValue5 = lib.returnNumStringTwo(dr["InspectValue5"].ToString()),
-                                InspectValue6 = lib.returnNumStringTwo(dr["InspectValue6"].ToString()),
-                                InspectValue7 = lib.returnNumStringTwo(dr["InspectValue7"].ToString()),
-                                InspectValue8 = lib.returnNumStringTwo(dr["InspectValue8"].ToString()),
-                                InspectValue9 = lib.returnNumStringTwo(dr["InspectValue9"].ToString()),
-                                InspectValue10 = lib.returnNumStringTwo(dr["InspectValue10"].ToString()),
+                                InspectValue1 = lib.returnNumStringAll(dr["InspectValue1"].ToString()),
+                                InspectValue2 = lib.returnNumStringAll(dr["InspectValue2"].ToString()),
+                                InspectValue3 = lib.returnNumStringAll(dr["InspectValue3"].ToString()),
+                                InspectValue4 = lib.returnNumStringAll(dr["InspectValue4"].ToString()),
+                                InspectValue5 = lib.returnNumStringAll(dr["InspectValue5"].ToString()),
+                                InspectValue6 = lib.returnNumStringAll(dr["InspectValue6"].ToString()),
+                                InspectValue7 = lib.returnNumStringAll(dr["InspectValue7"].ToString()),
+                                InspectValue8 = lib.returnNumStringAll(dr["InspectValue8"].ToString()),
+                                InspectValue9 = lib.returnNumStringAll(dr["InspectValue9"].ToString()),
+                                InspectValue10 = lib.returnNumStringAll(dr["InspectValue10"].ToString()),
                                 InspectText1 = dr["InspectText1"].ToString(),
                                 InspectText2 = dr["InspectText2"].ToString(),
                                 InspectText3 = dr["InspectText3"].ToString(),
@@ -1621,7 +1621,7 @@ namespace WizMes_HanMin
                                 InspectText8 = dr["InspectText8"].ToString(),
                                 InspectText9 = dr["InspectText9"].ToString(),
                                 InspectText10 = dr["InspectText10"].ToString(),
-                                insSpec = dr["insSpec"].ToString(),
+                                insSpec = lib.returnNumericString(dr["insSpec"].ToString()),
                                 R = dr["R"].ToString(),
                                 Sigma = "",  //dr["Sigma"].ToString(),
                                 xBar = dr["xBar"].ToString(),
@@ -5154,132 +5154,25 @@ namespace WizMes_HanMin
         }
 
         private void btnUploadExcel_Click(object sender, RoutedEventArgs e)
-        {
-            string fileName = string.Empty;
-            fileName = SelectFiles();
-            fileName = Path.GetFileName(fileName);
+        {         
+
+            ExcelToDB excel = new ExcelToDB(strPoint);
+            excel.OperationCompleted += UploadComplete;
+            excel.ShowDialog();
         }
-
-        private string  SelectFiles()
+        private void UploadComplete(object sender, OperationCompletedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog() { Filter = "Excel Files (*.xlsx)|*.xlsx" };
-            bool? result = ofd.ShowDialog();           
-
-            if (result == true)
+            if (e.Success)
             {
-               
-                return ofd.FileName;
+                FillGrid();
             }
-
-            return null;
-        }
-    }
-
-
-    public class LoadingDialog : Window
-    {
-        private ProgressBar _progressBar;
-        private TextBlock textBlock;
-        private BackgroundWorker _worker;
-
-        public LoadingDialog(string Text, string Title, string sourcePath, string UseProgressBar)
-        {
-            this.Title = Title;
-            Width = 400;
-            Height = 150;
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            ResizeMode = ResizeMode.NoResize;
-            WindowStyle = WindowStyle.ToolWindow;
-            ShowInTaskbar = false;
-
-            var grid = new Grid();
-            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-            var iconImage = new System.Windows.Controls.Image
-            {
-                //Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,/Resources/verification.png") as ImageSource,
-                Source = new ImageSourceConverter().ConvertFromString(sourcePath) as ImageSource,
-                Width = 50,
-                Height = 50,
-                Margin = new Thickness(20, 0, 0, 0),
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            Grid.SetRow(iconImage, 0);
-            Grid.SetRowSpan(iconImage, 2);
-            Grid.SetColumn(iconImage, 0);
-
-            textBlock = new System.Windows.Controls.TextBlock
-            {
-                Text = Text,
-                FontSize = 14,
-                Margin = new Thickness(20, 0, 20, 0),
-                VerticalAlignment = VerticalAlignment.Center,
-                TextWrapping = TextWrapping.Wrap
-            };
-            Grid.SetRow(textBlock, 0);
-            Grid.SetColumn(textBlock, 1);
-
-            if (UseProgressBar == "Y")
-            {
-                _progressBar = new ProgressBar
-                {
-                    Minimum = 0,
-                    Maximum = 100,
-                    Value = 0,
-                    Height = 20,
-                    Margin = new Thickness(20, 10, 20, 20),
-                    HorizontalAlignment = HorizontalAlignment.Stretch
-                };
-                Grid.SetRow(_progressBar, 2);
-                Grid.SetColumn(_progressBar, 0);
-                Grid.SetColumnSpan(_progressBar, 2);
-                grid.Children.Add(_progressBar);
+            else
+            {               
+                MessageBox.Show("파일 업로드에 실패했습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            grid.Children.Add(iconImage);
-            grid.Children.Add(textBlock);
-
-            Content = grid;
-        }
-
-        public void SetProgress(double value)
-        {
-            Dispatcher.Invoke(new System.Action(() =>
-            {
-                if (_progressBar != null)
-                {
-                    _progressBar.Value = value;
-                }
-            }));
-        }
-
-        public void UpdateText(string newText)
-        {
-            Dispatcher.Invoke(new System.Action(() =>
-            {
-                textBlock.Text = newText;
-            }));
-        }
-
-        public void UpdateTextAndProgress(string newText, double progressValue)
-        {
-            Dispatcher.Invoke(new System.Action(() =>
-            {
-                textBlock.Text = newText;
-                if (_progressBar != null)
-                {
-                    _progressBar.Value = progressValue;
-                }
-            }));
         }
 
     }
-
-
 
 
 

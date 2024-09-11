@@ -1054,7 +1054,7 @@
                                       SelectedValue="{Binding FMLGubun}"/>
 
                             <Label Grid.Column="6" Grid.Row="5" Style="{DynamicResource LabelInputArea}">
-                                <TextBlock Text="검사항목 수" />
+                                <TextBlock Text="검사항목 수"/>
                             </Label>
                             <Label Grid.Column="7" Grid.Row="5" Style="{DynamicResource LabelInputArea}">
                                 <TextBlock Text="판정결과" />
@@ -1481,7 +1481,7 @@
                             <DataGridTemplateColumn Header="중심규격" Width="auto">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding insSpec,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                                        <TextBlock Text="{Binding insSpec,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" TextAlignment="Right"/> 
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -1702,7 +1702,7 @@
                             <DataGridTemplateColumn Header="중심값" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding insSpec}" Style="{DynamicResource TextBlockInDataGrid}"/>
+                                        <TextBlock Text="{Binding insSpec}" Style="{DynamicResource TextBlockInDataGrid}" TextAlignment="Right"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

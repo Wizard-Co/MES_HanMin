@@ -3025,6 +3025,54 @@ namespace WizMes_HanMin
             return returnString;
         }
 
+
+        //소수점 모두 리턴
+        public string returnNumStringAll(string strTarget)
+        {
+            string returnString = string.Empty;
+
+            if (strTarget.Contains(","))
+            {
+                strTarget = strTarget.Replace(",", "");
+            }
+
+            if (this.IsNumOrAnother(strTarget))
+            {
+                returnString = double.Parse(strTarget).ToString();
+            }
+            else
+            {
+                returnString = strTarget;
+            }
+
+            return returnString;
+        }
+
+        //정수는 정수, 소숫점은 소숫점 그대로, 이외는 받은 문자열로 내보내기
+        public string returnNumericString(string strTarget)
+        {
+
+            strTarget = strTarget.Replace(",", "");
+
+        
+            if (double.TryParse(strTarget, out double number))
+            {
+         
+                if (number == Math.Floor(number))
+                {                  
+                    return ((long)number).ToString();
+                }
+                else
+                {                    
+                    return number.ToString();
+                }
+            }
+            else
+            {              
+                return strTarget;
+            }
+        }
+
         //소수점은 놔두고 리턴
         public string returnNumStringTwoExceptDot(string strTarget)
         {
