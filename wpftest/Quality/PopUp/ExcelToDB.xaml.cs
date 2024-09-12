@@ -94,63 +94,85 @@ namespace WizMes_HanMin.Quality.PopUp
         private bool CheckInsBasis(DataTable dt, string ArticleID, string strPoint)
         {
             bool flag = true;
-            
-            List<string> list_insItemName    = new List<string>();
-            List<string> list_InsRASpec      = new List<string>();
-            List<string> list_InsRASpecMin   = new List<string>();
-            List<string> list_InsRASpecMax   = new List<string>();
+
+            List<string> list_insItemName = new List<string>();
+            List<string> list_InsRASpec = new List<string>();
+            List<string> list_InsRASpecMin = new List<string>();
+            List<string> list_InsRASpecMax = new List<string>();
 
             double double_InsRASpecMin = 0;
             double double_InsRASpecMax = 0;
 
-            string insItemName  = string.Empty;
-            string InsRASpec    = string.Empty;
+            string insItemName = string.Empty;
+            string InsRASpec = string.Empty;
             string InsRASpecMin = string.Empty;
             string InsRASpecMax = string.Empty;
 
-            for(int i = 0; i < dt.Rows.Count; i++)
-            {
-                DataRow dr = dt.Rows[i];
-
-                double_InsRASpecMin = Convert.ToDouble(dr["Column6"].ToString()) + Convert.ToDouble(dr["Column9"].ToString());
-                double_InsRASpecMax = Convert.ToDouble(dr["Column6"].ToString()) + Convert.ToDouble(dr["Column8"].ToString());
-
-                list_insItemName.Add(dr["Column0"].ToString() + " " + dr["Column1"].ToString());
-                list_InsRASpec.Add(dr["Column6"].ToString());
-                list_InsRASpecMin.Add(double_InsRASpecMin.ToString());
-                list_InsRASpecMax.Add(double_InsRASpecMax.ToString());  
-
-            }
-
-            insItemName = string.Join("|", list_insItemName);
-            InsRASpec = string.Join("|", list_InsRASpec);
-            InsRASpecMin = string.Join("|", list_InsRASpecMin);
-            InsRASpecMax = string.Join("|", list_InsRASpecMax);
-
-
-            Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
-            sqlParameter.Add("ArticleID", ArticleID);
-            sqlParameter.Add("InspectPoint", strPoint);
-            sqlParameter.Add("insItemName", insItemName);
-            sqlParameter.Add("InsRASpec", InsRASpec);
-            sqlParameter.Add("InsRASpecMin", InsRASpecMin);
-            sqlParameter.Add("InsRASpecMax", InsRASpecMax);
-
-            //시트에서 얻은 검사항목명/검사기준값/상한/하한을 구분자로 묶어 전달, 프로시저내에서 비교하여
-            //내용과 일치하는 검사기준번호를 가지고 온다.
-            DataSet dataSet = DataStore.Instance.ProcedureToDataSet("xp_Inspect_chkInspectAutoBasis", sqlParameter, false);
-
-            if (dataSet != null && dataSet.Tables.Count > 0)
-            {
-                DataTable dataTable = dataSet.Tables[0];
-
-                if (dataTable.Rows.Count > 0)
+            try
+            { 
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    DataRow dataRow = dataTable.Rows[0];                    
-                    if (dataRow[0].ToString() == "NO")     flag = false; //NO이면 검사기준을 이후에 자동으로 새로 만듬
-                    else InspectBasisID_global = dataRow[0].ToString();  //검사기준번호를 반환하고 이걸 전역변수에 할당함
+                    DataRow dr = dt.Rows[i];
+
+                    double_InsRASpecMin = Convert.ToDouble(dr["Column6"].ToString()) + Convert.ToDouble(dr["Column9"].ToString());
+                    double_InsRASpecMax = Convert.ToDouble(dr["Column6"].ToString()) + Convert.ToDouble(dr["Column8"].ToString());
+
+                    list_insItemName.Add(dr["Column0"].ToString() + " " + dr["Column1"].ToString());
+                    list_InsRASpec.Add(dr["Column6"].ToString());
+                    list_InsRASpecMin.Add(double_InsRASpecMin.ToString());
+                    list_InsRASpecMax.Add(double_InsRASpecMax.ToString());
+
+                }
+
+                insItemName = string.Join("|", list_insItemName);
+                InsRASpec = string.Join("|", list_InsRASpec);
+                InsRASpecMin = string.Join("|", list_InsRASpecMin);
+                InsRASpecMax = string.Join("|", list_InsRASpecMax);
+
+
+                Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
+                sqlParameter.Add("ArticleID", ArticleID);
+                sqlParameter.Add("InspectPoint", strPoint);
+                sqlParameter.Add("insItemName", insItemName);
+                sqlParameter.Add("InsRASpec", InsRASpec);
+                sqlParameter.Add("InsRASpecMin", InsRASpecMin);
+                sqlParameter.Add("InsRASpecMax", InsRASpecMax);
+
+                //시트에서 얻은 검사항목명/검사기준값/상한/하한을 구분자로 묶어 전달, 프로시저내에서 비교하여
+                //내용과 일치하는 검사기준번호를 가지고 온다.
+                DataSet dataSet = DataStore.Instance.ProcedureToDataSet("xp_Inspect_chkInspectAutoBasis", sqlParameter, false);
+
+                if (dataSet != null && dataSet.Tables.Count > 0)
+                {
+                    DataTable dataTable = dataSet.Tables[0];
+
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        DataRow dataRow = dataTable.Rows[0];
+                        if (dataRow[0].ToString() == "NO") flag = false; //NO이면 검사기준을 이후에 자동으로 새로 만듬
+                        else InspectBasisID_global = dataRow[0].ToString();  //검사기준번호를 반환하고 이걸 전역변수에 할당함
+                    }
                 }
             }
+            catch (Exception e)
+            {
+
+                if (e.Message.Contains("열은") && e.Message.Contains("테이블에 속하지 않습니다"))
+                {
+                    MessageBox.Show("값을 읽어오는 도중 오류가 발생했습니다." +
+                                   "\n형상측정결과 파일을 엑셀 또는 메모장으로 직접 열어 수정한\n경우 발생 할 수 있습니다." +
+                                   "\n가능한 원본 파일을 사용하여 주세요. 업로드를 중지합니다.", "파일 손상됨", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                }
+                else
+                {
+                    MessageBox.Show("오류 발생 : " + e.ToString());
+                }
+
+                flag = false;
+                _err = false;
+            }
+
 
             return flag;
         }
@@ -261,7 +283,18 @@ namespace WizMes_HanMin.Quality.PopUp
             }
             catch (Exception e)
             {
-                MessageBox.Show("오류 발생 : " + e.ToString());
+                if(e.Message.Contains("열은") && e.Message.Contains("테이블에 속하지 않습니다"))
+                {
+                    MessageBox.Show("값을 읽어오는 도중 오류가 발생했습니다." +
+                                    "\n형상측정결과 파일을 엑셀 또는 메모장으로 직접 열어 수정한\n경우 발생 할 수 있습니다." +
+                                    "\n가능한 원본 파일을 사용하여 주세요. 업로드를 중지합니다.", "파일 손상됨",MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show("오류 발생 : " + e.ToString());              
+                }
+                flag = false;
+                _err = false;
             }
             finally
             {
@@ -612,17 +645,13 @@ namespace WizMes_HanMin.Quality.PopUp
                 if (!CheckInsBasis(dt, strArticleID, strPoint)) //검사기준 없으면 자동 등록하고 업로드
                 {
                     flag = AutoRegisterBasis(dt, strArticleID, strPoint); //검사 기준 자동 등록
-                    loadingDialog.UpdateProgressAndWait("미등록 대상 자동 등록 중...", 30, 60);
                     if(flag == false)
                     {
-                        MessageBox.Show("검사 기준 등록 중 오류가 발생했습니다.\n업로드 실패", "확인", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Application.Current.Dispatcher.Invoke(new System.Action(() =>
-                        {   //진행 창 닫기
-                            loadingDialog.Close();
-                        }));
+                        ErrCloseDialog(loadingDialog);
                         return;
                     }
-                    if(flag == true)
+                    loadingDialog.UpdateProgressAndWait("미등록 대상 자동 등록 중...", 30, 60);
+                    if (flag == true)
                     {
                         UploadDataToDB(dt, strArticleID, strPoint);
                         loadingDialog.UpdateProgressAndWait("업로드를 하고 있습니다...", 60, 90);
@@ -650,6 +679,19 @@ namespace WizMes_HanMin.Quality.PopUp
 
             });
 
+        }
+
+
+        private void ErrCloseDialog(LoadingDialog loadingDialog)
+        {
+            _err = false;          
+            Application.Current.Dispatcher.Invoke(new Action(delegate ()
+            {
+                if (loadingDialog != null)
+                {
+                    loadingDialog.Close();
+                }
+            }));
         }
 
 
@@ -827,7 +869,7 @@ namespace WizMes_HanMin.Quality.PopUp
                 {
                     if(((ExcelToDB)this.Owner)._err == true)
                     {
-                        MessageBox.Show("파일 업로드가 완료되었습니다.", "성공", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("데이터 업로드가 완료되었습니다.", "성공", MessageBoxButton.OK, MessageBoxImage.Information);
                         this.DialogResult = true;
 
                         // 성공적으로 완료된 경우에만 작업완료 알림

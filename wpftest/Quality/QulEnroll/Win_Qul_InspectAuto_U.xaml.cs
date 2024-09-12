@@ -480,6 +480,8 @@ namespace WizMes_HanMin
             txtRegular.IsHitTestVisible = false;
             btnRegular.IsHitTestVisible = false;
 
+            btnUploadExcel.IsEnabled = true;
+
         }
 
         /// <summary>
@@ -502,6 +504,7 @@ namespace WizMes_HanMin
             txtRegular.IsHitTestVisible = true;
             btnRegular.IsHitTestVisible = true;
 
+            btnUploadExcel.IsEnabled = false;
         }
 
         private void SetControlsWhenAdd()
@@ -639,7 +642,7 @@ namespace WizMes_HanMin
                     {
                         Wh_Ar_SelectedLastIndex -= 1;
                         re_Search(Wh_Ar_SelectedLastIndex);
-                        clear();
+                        if(Wh_Ar_SelectedLastIndex == -1) clear();
                     }
                 }
             }
@@ -1183,6 +1186,7 @@ namespace WizMes_HanMin
         {
             if (SaveData(strFlag, txtinspectID.Text))
             {
+                GetValueCount();
                 CanBtnControl();
                 lblMsg.Visibility = Visibility.Hidden;
                 dgdMain.IsHitTestVisible = true;
@@ -1773,6 +1777,13 @@ namespace WizMes_HanMin
                 int OutSeq = 0;
                 if(strPoint == "5" && replyOutSeq !=null && replyOutSeq != "") { OutSeq = Convert.ToInt32(replyOutSeq); }
 
+                int sumInspectQty = 0;
+                int sumDefectQty = 0;
+
+                sumInspectQty = Convert.ToInt32(txtInspectQty.Text) - Convert.ToInt32(txtTotalDefectQty.Text);           
+                sumDefectQty = Convert.ToInt32(txtTotalDefectQty.Text);
+
+
                 if (CheckData())
                 {
                     Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
@@ -1825,8 +1836,8 @@ namespace WizMes_HanMin
                     sqlParameter.Add("TotalDefectQty", lib.CheckNullZero(txtTotalDefectQty.Text));
                     sqlParameter.Add("MilSheetNo", txtMilSheetNo.Text);
 
-                    sqlParameter.Add("SumInspectQty", lib.CheckNullZero(txtSumInspectQty.Text.Replace(",", "")));
-                    sqlParameter.Add("SumDefectQty", lib.CheckNullZero(txtSumDefectQty.Text.Replace(",", "")));
+                    sqlParameter.Add("SumInspectQty", lib.CheckNullZero(sumInspectQty.ToString().Replace(",", "")));
+                    sqlParameter.Add("SumDefectQty", lib.CheckNullZero(sumDefectQty.ToString().Replace(",", "")));
 
                     #region 추가
 
@@ -5165,6 +5176,8 @@ namespace WizMes_HanMin
             if (e.Success)
             {
                 FillGrid();
+                int row = dgdMain.Items.Count -1;        
+                dgdMain.SelectedIndex = row;
             }
             else
             {               
