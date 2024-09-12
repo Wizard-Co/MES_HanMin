@@ -43,6 +43,7 @@ namespace WizMes_HanMin.Quality.PopUp
     /// </summary>
     public partial class ExcelToDB : Window
     {
+        string InspectBasisID_global = string.Empty;
         string strPoint = string.Empty;            
         string CreateUserID = MainWindow.CurrentUser;
         public bool _err = true;                        
@@ -90,26 +91,64 @@ namespace WizMes_HanMin.Quality.PopUp
         #region 등록 전&후 데이터 확인/검사기준 자동 셋팅/수정 메서드
         
         //ArticleID에 등록된 검사기준이 있는지 확인
-        private bool CheckInsBasis(string ArticleID, string strPoint)
+        private bool CheckInsBasis(DataTable dt, string ArticleID, string strPoint)
         {
             bool flag = true;
+            
+            List<string> list_insItemName    = new List<string>();
+            List<string> list_InsRASpec      = new List<string>();
+            List<string> list_InsRASpecMin   = new List<string>();
+            List<string> list_InsRASpecMax   = new List<string>();
+
+            double double_InsRASpecMin = 0;
+            double double_InsRASpecMax = 0;
+
+            string insItemName  = string.Empty;
+            string InsRASpec    = string.Empty;
+            string InsRASpecMin = string.Empty;
+            string InsRASpecMax = string.Empty;
+
+            for(int i = 0; i < dt.Rows.Count; i++)
+            {
+                DataRow dr = dt.Rows[i];
+
+                double_InsRASpecMin = Convert.ToDouble(dr["Column6"].ToString()) + Convert.ToDouble(dr["Column9"].ToString());
+                double_InsRASpecMax = Convert.ToDouble(dr["Column6"].ToString()) + Convert.ToDouble(dr["Column8"].ToString());
+
+                list_insItemName.Add(dr["Column0"].ToString() + " " + dr["Column1"].ToString());
+                list_InsRASpec.Add(dr["Column6"].ToString());
+                list_InsRASpecMin.Add(double_InsRASpecMin.ToString());
+                list_InsRASpecMax.Add(double_InsRASpecMax.ToString());  
+
+            }
+
+            insItemName = string.Join("|", list_insItemName);
+            InsRASpec = string.Join("|", list_InsRASpec);
+            InsRASpecMin = string.Join("|", list_InsRASpecMin);
+            InsRASpecMax = string.Join("|", list_InsRASpecMax);
+
 
             Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
             sqlParameter.Add("ArticleID", ArticleID);
             sqlParameter.Add("InspectPoint", strPoint);
+            sqlParameter.Add("insItemName", insItemName);
+            sqlParameter.Add("InsRASpec", InsRASpec);
+            sqlParameter.Add("InsRASpecMin", InsRASpecMin);
+            sqlParameter.Add("InsRASpecMax", InsRASpecMax);
 
-            DataSet ds = DataStore.Instance.ProcedureToDataSet("xp_Inspect_chkInspectAutoBasis", sqlParameter, false);
+            //시트에서 얻은 검사항목명/검사기준값/상한/하한을 구분자로 묶어 전달, 프로시저내에서 비교하여
+            //내용과 일치하는 검사기준번호를 가지고 온다.
+            DataSet dataSet = DataStore.Instance.ProcedureToDataSet("xp_Inspect_chkInspectAutoBasis", sqlParameter, false);
 
-            if (ds != null && ds.Tables.Count > 0)
+            if (dataSet != null && dataSet.Tables.Count > 0)
             {
-                DataTable dt = ds.Tables[0];
+                DataTable dataTable = dataSet.Tables[0];
 
-                if (dt.Rows.Count > 0)
+                if (dataTable.Rows.Count > 0)
                 {
-                    DataRow dr = dt.Rows[0];
-
-                    if (dr[0].ToString() == "NO")
-                        flag = false;
+                    DataRow dataRow = dataTable.Rows[0];                    
+                    if (dataRow[0].ToString() == "NO")     flag = false; //NO이면 검사기준을 이후에 자동으로 새로 만듬
+                    else InspectBasisID_global = dataRow[0].ToString();  //검사기준번호를 반환하고 이걸 전역변수에 할당함
                 }
             }
 
@@ -136,9 +175,10 @@ namespace WizMes_HanMin.Quality.PopUp
         {
             bool flag = true;
             string InspectBasisID = string.Empty;
+            InspectBasisID_global = string.Empty; //검사기준에 부합하는게 없기 때문에 여기서 초기화
 
             try
-            {
+                {
                 //mt_InspectAutoBasis 등록
                 Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
                 sqlParameter.Add("ArticleID", ArticleID);
@@ -420,8 +460,10 @@ namespace WizMes_HanMin.Quality.PopUp
                 string[] result = DataStore.Instance.ExecuteProcedure("xp_Inspect_iAutoInspect_AutoRegister", sqlParameter, true);
                 if (result[0].Equals("success"))
                 {
-                    string[] arr = result[1].Split('|');
-                    InspectBasisID = arr[0];
+                    string[] arr = result[1].Split('|'); //구분자로 문자열 내용 '검사기준번호|검사번호'를 반환
+                    //검사기준과 일치하는 것이 있었으면 그 검사기준번호(InspectBasisID_global)를
+                    //가지고 오고 그렇지 않으면 새로 만든걸(arr[0]) 갖다 쓴다.
+                    InspectBasisID = InspectBasisID_global == string.Empty ? arr[0] : InspectBasisID_global;
                     InspectID = arr[1];
                 }
                 else
@@ -542,14 +584,11 @@ namespace WizMes_HanMin.Quality.PopUp
             //BackGroundWorker를 통해 업로드를 하면서 UI를 업데이트 할 수 있도록 함         
             loadingDialog.StartProcess(worker =>
             {
-                string extension = System.IO.Path.GetExtension(fileName);
-                DataSet table;
-
+                string extension = System.IO.Path.GetExtension(fileName); 
 
                 loadingDialog.UpdateProgressAndWait("파일 읽는 중...", 0, 15);
 
-                //시트를 읽고 값이 있을때만 진행, 없으면 중단
-                
+                //시트를 읽고 값이 있을때만 진행, 없으면 중단                
                 if (extension.Contains("CSV"))
                 {
                     ds = ReadCsvFile(fileName);
@@ -565,12 +604,12 @@ namespace WizMes_HanMin.Quality.PopUp
                 //}
                 else
                 {
-                    table = EmptyDataSet();
+                    ds = EmptyDataSet();
                 }
 
                 loadingDialog.UpdateProgressAndWait("검사기준 등록 확인 중...", 15, 30);
 
-                if (!CheckInsBasis(strArticleID, strPoint)) //검사기준 없으면 자동 등록하고 업로드
+                if (!CheckInsBasis(dt, strArticleID, strPoint)) //검사기준 없으면 자동 등록하고 업로드
                 {
                     flag = AutoRegisterBasis(dt, strArticleID, strPoint); //검사 기준 자동 등록
                     loadingDialog.UpdateProgressAndWait("미등록 대상 자동 등록 중...", 30, 60);
