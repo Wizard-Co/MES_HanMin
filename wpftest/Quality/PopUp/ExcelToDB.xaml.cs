@@ -119,7 +119,7 @@ namespace WizMes_HanMin.Quality.PopUp
         //읽은 파일의 경로를 돌려주기
         private string SelectFiles()
         {
-            OpenFileDialog ofd = new OpenFileDialog() { Filter = "Excel Files (*.xlsx;*.xls)|*.xlsx;*.xls|CSV Files (*.csv)|*.csv" };
+            OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV Files (*.csv)|*.csv" };
             bool? result = ofd.ShowDialog();
 
             if (result == true)
@@ -548,20 +548,21 @@ namespace WizMes_HanMin.Quality.PopUp
 
                 loadingDialog.UpdateProgressAndWait("파일 읽는 중...", 0, 15);
 
-                //시트를 읽고 값이 있을때만 진행 없으면 중단
-                if (extension.Contains("xls"))
-                {
-                    ds = ReadExcelFile(fileName);
-                    if (ds.Tables.Count > 0) dt = ds.Tables[0];
-                    else { _err = false; return; }
-                }
-                else if (extension.Contains("CSV"))
+                //시트를 읽고 값이 있을때만 진행, 없으면 중단
+                
+                if (extension.Contains("CSV"))
                 {
                     ds = ReadCsvFile(fileName);
                     if (ds.Tables.Count > 0) dt = ds.Tables[0];
                     else { _err = false; return; }
 
                 }
+                //else if (extension.Contains("xls"))
+                //{
+                //    ds = ReadExcelFile(fileName);
+                //    if (ds.Tables.Count > 0) dt = ds.Tables[0];
+                //    else { _err = false; return; }
+                //}
                 else
                 {
                     table = EmptyDataSet();
