@@ -478,12 +478,12 @@ namespace WizMes_HanMin
                 {
                     if (MessageBox.Show("선택하신 항목을 삭제하시겠습니까?", "삭제 전 확인", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-
+                    
                         foreach (Win_ord_OutWare_Scan_CodeView RemoveData in lstOutwarePrint)
                         {
                             if (DeleteData(RemoveData.OutwareID))
                             {
-                                rowNum = 0;
+                                rowNum = dgdOutware.SelectedIndex - 1;
                                 re_Search(rowNum);
                             }
                         }
@@ -570,18 +570,22 @@ namespace WizMes_HanMin
         {
             try
             {
+                int LastSelectedIndex = dgdOutware.Items.Count == 0 ? -1 : dgdOutware.SelectedIndex;  
+
+
                 EventStatus = false;
                 CantBtnControl();           //버튼 컨트롤
                 TextBoxClear();
 
                 if (strFlag.Equals("I"))
                 {
-                    re_Search(0);
+                    re_Search(LastSelectedIndex);
                 }
                 else if (strFlag.Equals("U"))
                 {
-                    re_Search(rowNum);
+                    re_Search(LastSelectedIndex);
                 }
+            
 
                 strFlag = string.Empty;
             }

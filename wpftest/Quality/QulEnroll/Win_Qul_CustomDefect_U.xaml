@@ -100,7 +100,7 @@
                         </Viewbox>
                     </StackPanel>
                 </Label>
-                <TextBox x:Name="txtCustomer" Grid.Column="1" Style="{DynamicResource TextBoxSearch_Q}"/>
+                <TextBox x:Name="txtCustomer" Grid.Column="1" KeyDown="txtCustomer_KeyDown" Style="{DynamicResource TextBoxSearch_Q}"/>
                 <Button x:Name="btnCustomer"   Grid.Column="2" Click="btnCustomer_Click"  >
                     <Image Source="{DynamicResource btiPlusFind}" Style="{DynamicResource imgPlusFind}"/>
                 </Button>
@@ -472,7 +472,7 @@
             <GridSplitter Grid.Column="1" Margin="1" Width="5" HorizontalAlignment="Stretch"/>
 
 
-            <Grid Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" >
+            <Grid x:Name="Sub1" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100*" />
                     <RowDefinition Height="300*" />
@@ -835,7 +835,7 @@
 
 
 
-            <Grid Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" >
+            <Grid x:Name="Sub2" Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20*" />
                     <RowDefinition Height="205*" />

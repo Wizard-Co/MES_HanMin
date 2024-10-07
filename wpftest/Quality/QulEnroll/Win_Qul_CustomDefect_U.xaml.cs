@@ -11,6 +11,7 @@ using System.Windows.Input;
 using WPF.MDI;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows.Media;
 
 namespace WizMes_HanMin
 {
@@ -2334,6 +2335,7 @@ namespace WizMes_HanMin
                     return false;
                 }
             }
+            listStrArrayFileInfo.Clear();
             return true;
         }
 
@@ -2516,7 +2518,6 @@ namespace WizMes_HanMin
 
 
         #region 텍스트박스 엔터 키 이벤트
-
 
         private void txtDefectNo_InGroupBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -2717,6 +2718,48 @@ namespace WizMes_HanMin
 
         #endregion
 
+        //남아있는 데이터로 오류 방지 입력칸 비우기
+        private void ClearInputGrid()
+        {
+            //여기에 비우고자 하는 그리드를 파라미터로 적어주세요
+            ClearTextLabel(Sub1);
+            ClearTextLabel(Sub2);
+        }
+
+        //UI컨트롤을 찾아 해당하는 요소가 있으면 내용을 비움
+        private void ClearTextLabel(DependencyObject parent)
+        {
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+
+            for (int i = 0; i < childCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is TextBox textBox)
+                {
+                    // TextBox를 찾으면 Text 속성을 빈 문자열로 설정
+                    textBox.Text = string.Empty;
+                    textBox.Tag = null;
+                }
+                if (child is ComboBox comboBox)
+                {
+                    //콤보박스 선택값 비워줌
+                    comboBox.SelectedValue = "";
+                }
+                if(child is DatePicker datePicker)
+                {
+                    //달력 비워줌
+                    datePicker.SelectedDate = null;
+                }
+                else
+                {
+                    // 자식이 TextBox가 아니면 재귀적으로 그 자식의 자식들을 탐색
+                    ClearTextLabel(child);
+                }
+            }
+        }
+
+
         private void DataGrid_SizeChange(object sender, SizeChangedEventArgs e)
         {
             DataGrid dgs = sender as DataGrid;
@@ -2785,6 +2828,11 @@ namespace WizMes_HanMin
                 MessageBox.Show("종료일자는 시작일 이후로 설정해주세요.");
                 dtpToDate.SelectedDate = Convert.ToDateTime(e.RemovedItems[0].ToString());
             }
+        }
+
+        private void txtCustomer_KeyDown(object sender, KeyEventArgs e)
+        {
+            btnCustomer_Click(null, null);
         }
     }
 

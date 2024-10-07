@@ -1792,6 +1792,7 @@ namespace WizMes_HanMin
                     sqlParameter.Add("ArticleID", txtArticleName.Tag.ToString());
                     sqlParameter.Add("InspectGubun", cboInspectGbn.SelectedValue.ToString());
                     sqlParameter.Add("InspectDate", dtpInspectDate.SelectedDate.Value.ToString("yyyyMMdd"));
+                    sqlParameter.Add("strPoint", strPoint);
                     sqlParameter.Add("LotID", txtLotNO.Text);
 
 
