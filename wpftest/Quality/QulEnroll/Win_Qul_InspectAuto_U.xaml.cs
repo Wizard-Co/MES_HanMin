@@ -1536,7 +1536,7 @@ namespace WizMes_HanMin
                         }
                     }
 
-                    cboProcess_SelectionChanged(null, null);
+                    //cboProcess_SelectionChanged(null, null);
                     if (!tmpMachineID.Equals(string.Empty))
                     {
                         //cboMachine.SelectedValue = WinInsAuto.MachineID;
@@ -4042,7 +4042,8 @@ namespace WizMes_HanMin
                             CustomID = dr["CustomID"].ToString(),
                             Custom = dr["Custom"].ToString(),
                             InoutDate = dr["InoutDate"].ToString(),
-                            lotid = dr["lotid"].ToString()
+                            lotid = dr["lotid"].ToString(),
+                            ProcessID = dr["ProcessID"].ToString(),
                        
                         };
 
@@ -4052,6 +4053,7 @@ namespace WizMes_HanMin
                         txtInOutCustom.Text = LotInfo.Custom;
                         txtInOutCustom.Tag = LotInfo.CustomID;                    
                         txtLotNO.Text = LotInfo.lotid;
+                  
 
                         if (LotInfo.InoutDate.Replace(" ", "").Length > 0)
                         {
@@ -4071,7 +4073,14 @@ namespace WizMes_HanMin
                             {
                                 cboEcoNO.SelectedIndex = 0;
                             }
+
+                            if(cboProcess.ItemsSource != null && LotInfo.ProcessID != "")
+                            {
+                                cboProcess.SelectedValue = LotInfo.ProcessID;
+                            }
                         }
+
+                        
                     }
                     else
                     {

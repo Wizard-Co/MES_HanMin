@@ -479,7 +479,7 @@
                             </Viewbox>
                         </Label>
                         <TextBox x:Name="txtProcess" Grid.Row="3" Grid.Column="1" IsReadOnly="True" 
-                                 Text="{Binding Process}" Tag="{Binding ProcessID}" Style="{DynamicResource TextBoxInputNecessary}"
+                                 Text="{Binding Process}" Tag="{Binding ProcessID}"
                                  Keyboard.KeyDown="txtProcess_KeyDown"/>
                         <Button x:Name="btnPfProcess" Grid.Row="3" Grid.Column="2" Visibility="Hidden"
                                 Click="btnPfProcess_Click">
