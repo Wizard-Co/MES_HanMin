@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WizMes_HanMin.PopUp;
 using WizMes_HanMin.PopUP;
+using WizMes_HanMin;
 
 namespace WizMes_HanMin
 {
@@ -42,82 +44,74 @@ namespace WizMes_HanMin
             DataStore.Instance.InsertLogByFormS(this.GetType().Name, stDate, stTime, "S");
 
             lib.UiLoading(sender);
-            DatePickerStartDateSearch.SelectedDate = lib.BringThisMonthDatetimeList()[0];
-            DatePickerEndDateSearch.SelectedDate = lib.BringThisMonthDatetimeList()[1];
+            dtpSDate.SelectedDate = DateTime.Today;
+            dtpEDate.SelectedDate = DateTime.Today;
         }
 
         #region 상단 검색조건
-        //전년
-        private void ButtonLastYear_Click(object sender, RoutedEventArgs e)
+        //금일
+        private void btnToday_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (DatePickerStartDateSearch.SelectedDate != null)
-                {
-                    DatePickerStartDateSearch.SelectedDate = DatePickerStartDateSearch.SelectedDate.Value.AddYears(-1);
-                }
-                else
-                {
-                    DatePickerStartDateSearch.SelectedDate = DateTime.Today.AddDays(-1);
-                }
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show("오류지점 - " + ee.ToString());
-            }
+            dtpSDate.SelectedDate = DateTime.Today;
+            dtpEDate.SelectedDate = DateTime.Today;
         }
-
-        //전월
-        private void ButtonLastMonth_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (DatePickerStartDateSearch.SelectedDate != null)
-                {
-                    DateTime FirstDayOfMonth = DatePickerStartDateSearch.SelectedDate.Value.AddDays(-(DatePickerStartDateSearch.SelectedDate.Value.Day - 1));
-                    DateTime FirstDayOfLastMonth = FirstDayOfMonth.AddMonths(-1);
-
-                    DatePickerStartDateSearch.SelectedDate = FirstDayOfLastMonth;
-                }
-                else
-                {
-                    DateTime FirstDayOfMonth = DateTime.Today.AddDays(-(DateTime.Today.Day - 1));
-
-                    DatePickerStartDateSearch.SelectedDate = FirstDayOfMonth;
-                }
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show("오류지점 - " + ee.ToString());
-            }
-        }
-
-        //금년
-        private void ButtonThisYear_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (DatePickerStartDateSearch.SelectedDate != null)
-                {
-                    DatePickerStartDateSearch.SelectedDate = lib.BringThisYearDatetimeFormat()[0];
-                }
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show("오류지점 - " + ee.ToString());
-            }
-        }
-
         //금월
-        private void ButtonThisMonth_Click(object sender, RoutedEventArgs e)
+        private void btnThisMonth_Click(object sender, RoutedEventArgs e)
+        {
+            dtpSDate.SelectedDate = Lib.Instance.BringThisMonthDatetimeList()[0];
+            dtpEDate.SelectedDate = Lib.Instance.BringThisMonthDatetimeList()[1];
+        }
+        //전월
+        private void btnLastMonth_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                DatePickerStartDateSearch.SelectedDate = lib.BringThisMonthDatetimeList()[0];
+                if (dtpSDate.SelectedDate != null)
+                {
+                    DateTime ThatMonth1 = dtpSDate.SelectedDate.Value.AddDays(-(dtpSDate.SelectedDate.Value.Day - 1)); // 선택한 일자 달의 1일!
+
+                    DateTime LastMonth1 = ThatMonth1.AddMonths(-1); // 저번달 1일
+                    DateTime LastMonth31 = ThatMonth1.AddDays(-1); // 저번달 말일
+
+                    dtpSDate.SelectedDate = LastMonth1;
+                    dtpEDate.SelectedDate = LastMonth31;
+                }
+                else
+                {
+                    DateTime ThisMonth1 = DateTime.Today.AddDays(-(DateTime.Today.Day - 1)); // 이번달 1일
+
+                    DateTime LastMonth1 = ThisMonth1.AddMonths(-1); // 저번달 1일
+                    DateTime LastMonth31 = ThisMonth1.AddDays(-1); // 저번달 말일
+
+                    dtpSDate.SelectedDate = LastMonth1;
+                    dtpEDate.SelectedDate = LastMonth31;
+                }
             }
             catch (Exception ee)
             {
-                MessageBox.Show("오류지점 - " + ee.ToString());
+                MessageBox.Show("오류지점 - btnLastMonth_Click : " + ee.ToString());
+            }
+        }
+
+        //전일
+        private void btnYesterday_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (dtpSDate.SelectedDate != null)
+                {
+                    dtpSDate.SelectedDate = dtpSDate.SelectedDate.Value.AddDays(-1);
+                    dtpEDate.SelectedDate = dtpSDate.SelectedDate;
+                }
+                else
+                {
+                    dtpSDate.SelectedDate = DateTime.Today.AddDays(-1);
+                    dtpEDate.SelectedDate = DateTime.Today.AddDays(-1);
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("오류지점 - btnYesterday_Click : " + ee.ToString());
             }
         }
 
@@ -128,19 +122,14 @@ namespace WizMes_HanMin
         {
             try
             {
-                if (dgdOut.Items.Count > 0)
-                {
-                    dgdOut.Items.Clear();
-                }
-
-                if (dgdGonsu.Items.Count > 0)
-                {
-                    dgdGonsu.Items.Clear();
-                }
-
                 if (dgdQ.Items.Count > 0)
                 {
                     dgdQ.Items.Clear();
+                }
+
+                if (dgdP.Items.Count > 0)
+                {
+                    dgdP.Items.Clear();
                 }
 
                 FillGrid();
@@ -159,35 +148,43 @@ namespace WizMes_HanMin
         {
             try
             {
-                if (dgdOut.Items.Count > 0)
-                {
-                    dgdOut.Items.Clear();
-                }
-                if (dgdGonsu.Items.Count > 0)
-                {
-                    dgdGonsu.Items.Clear();
-                }
+                string ArticleID = null;
+
                 if (dgdQ.Items.Count > 0)
                 {
                     dgdQ.Items.Clear();
                 }
+                if (dgdP.Items.Count > 0)
+                {
+                    dgdP.Items.Clear();
+                }
+
+                if (chkBuyerArticleNo.IsChecked == true)
+                {
+                    ArticleID = txtBuyerArticleNoSearch.Tag.ToString();
+                }
+                else if (CheckBoxArticleSearch.IsChecked == true)
+                {
+                    ArticleID = TextBoxArticleSearch.Tag.ToString();
+                }
+
 
                 DataSet ds = null;
                 Dictionary<string, object> sqlParameter = new Dictionary<string, object>();
                 sqlParameter.Clear();
-                sqlParameter.Add("sFromDate", DatePickerStartDateSearch.SelectedDate == null ? "" : DatePickerStartDateSearch.SelectedDate.Value.ToString().Replace("-", ""));
-                sqlParameter.Add("sToDate", DatePickerEndDateSearch.SelectedDate == null ? "" : DatePickerEndDateSearch.SelectedDate.Value.ToString().Replace("-", ""));
-                sqlParameter.Add("ArticleID", chkArticleNo.IsChecked == true && txtArticleNoSearch.Tag != null ? txtArticleNoSearch.Tag.ToString() : ""); 
-                ds = DataStore.Instance.ProcedureToDataSet_LogWrite("xp_prd_sKPI_KPI", sqlParameter, true, "R");
+                sqlParameter.Add("FromDate", dtpSDate.SelectedDate == null ? "" : dtpSDate.SelectedDate.Value.ToString().Replace("-", ""));
+                sqlParameter.Add("ToDate", dtpEDate.SelectedDate == null ? "" : dtpEDate.SelectedDate.Value.ToString().Replace("-", ""));
+                sqlParameter.Add("ArticleNo", ArticleID != null ? ArticleID : ""); //품번
+                ds = DataStore.Instance.ProcedureToDataSet("xp_prd_sKPI_KPI", sqlParameter, false);
 
                 if (ds != null && ds.Tables.Count > 0)
                 {
-                    DataTable dt = ds.Tables[0]; 
+                    DataTable dt = ds.Tables[0];
                     int i = 0;
 
                     if (dt.Rows.Count == 0)
                     {
-
+                        MessageBox.Show("조회된 데이터가 없습니다.");
                     }
                     else
                     {
@@ -199,54 +196,35 @@ namespace WizMes_HanMin
                             {
                                 Num = i + 1,
 
-                                KPIKey = dr["KPIKey"].ToString(),
-                                MonthWorkHour = dr["MonthWorkHour"].ToString(),
-                                MonthWorkQty = dr["MonthWorkQty"].ToString(),
-
-                                MonthUPH = dr["MonthUPH"].ToString(),
-                                WorkQty = dr["WorkQty"].ToString(),
-                                DefectQty = dr["DefectQty"].ToString(),
-                                DefectRate = dr["DefectRate"].ToString(),
-                                McSettingHour = dr["McSettingHour"].ToString(),
-                                MtrYongGiHour = dr["MtrYongGiHour"].ToString(),
-                                PackingHour = dr["PackingHour"].ToString(),
-                                WorkHour = dr["WorkHour"].ToString(),
-                                WorkDate = dr["WorkDate"].ToString(),
-
+                                GbnName = dr["GbnName"].ToString(),
+                                ArticleNo = dr["ARTICLENO"].ToString(),
+                                Article = dr["article"].ToString(),
+                                WorkQty = stringFormatN0(dr["WorkQty"]),
+                                WorkTime = stringFormatN0(dr["WorkTime"]),
+                                WorkQtyPerHour = stringFormatN0(dr["WorkQtyPerHour"]),
+                                WorkUpRate = stringFormatN0(dr["WorkUpRate"]),
+                                WorkGoalRate = stringFormatN0(dr["WorkGoalRate"]),
+                                DefectQty = stringFormatN0(dr["DefectQty"]),
+                                DefectWorkQty = stringFormatN0(dr["DefectWorkQty"]),
+                                DefectRate = stringFormatN0(dr["DefectRate"]),
+                                DefectUpRate = stringFormatN0(dr["DefectUpRate"]),
+                                DefectGoalRate = stringFormatN0(dr["DefectGoalRate"]),
+                                gbn = dr["gbn"].ToString(),
+                                Sort = dr["Sort"].ToString(),
                             };
-
-                            //WPKQC.Gonsu = lib.returnNumStringZero(WPKQC.Gonsu);
-                            //WPKQC.OrderQty = lib.returnNumStringZero(WPKQC.OrderQty);
-                            //WPKQC.DiffOutDayPerQty = lib.returnNumStringZero(WPKQC.DiffOutDayPerQty);
-                            
-                            WPKQC.MonthWorkHour = lib.returnNumStringOne(WPKQC.MonthWorkHour);
-                            WPKQC.MonthWorkQty = lib.returnNumStringZero(WPKQC.MonthWorkQty);
-                            WPKQC.MonthUPH = lib.returnNumStringZero(WPKQC.MonthUPH);
-                            WPKQC.WorkQty = lib.returnNumStringZero(WPKQC.WorkQty);
-                            WPKQC.DefectQty = lib.returnNumStringZero(WPKQC.DefectQty);
-                            WPKQC.DefectRate = lib.returnNumStringZero(WPKQC.DefectRate);
-                            WPKQC.McSettingHour = lib.returnNumStringZero(WPKQC.McSettingHour);
-                            WPKQC.MtrYongGiHour = lib.returnNumStringZero(WPKQC.MtrYongGiHour);
-                            WPKQC.PackingHour = lib.returnNumStringZero(WPKQC.PackingHour);
-                            WPKQC.WorkHour = lib.returnNumStringZero(WPKQC.WorkHour);
-                            WPKQC.WorkDate = DatePickerFormat(WPKQC.WorkDate);
-
-                            if (WPKQC.KPIKey == "P")
+                            if (WPKQC.Sort == "Z")
                             {
-                                dgdGonsu.Items.Add(WPKQC);
+                                WPKQC.Total_Color = true;
                             }
-
-                            if (WPKQC.KPIKey == "Q")
+                            if (WPKQC.gbn == "Q")
                             {
                                 dgdQ.Items.Add(WPKQC);
                             }
 
-                            if (WPKQC.KPIKey == "D")
+                            if (WPKQC.gbn == "P")
                             {
-                                dgdOut.Items.Add(WPKQC);
+                                dgdP.Items.Add(WPKQC);
                             }
-
-                            
 
                             i++;
                         }
@@ -266,23 +244,41 @@ namespace WizMes_HanMin
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                rowNum = 0;
-                re_Search(rowNum);
+            //검색버튼 비활성화
+            btnSearch.IsEnabled = false;
 
-            }
-            catch (Exception ee)
+            Dispatcher.BeginInvoke(new Action(() =>
+
             {
-                MessageBox.Show("오류지점 - " + ee.ToString());
-            }
+                try
+                {
+                    rowNum = 0;
+                    using (Loading lw = new Loading(FillGrid))
+                    {
+                        lw.ShowDialog();
+
+                        if (dgdP.Items.Count <= 0 || dgdQ.Items.Count <= 0)
+                        {
+                            MessageBox.Show("조회된 내용이 없습니다.");
+                        }
+                        btnSearch.IsEnabled = true;
+                    }
+                }
+                catch (Exception ee)
+                {
+                    MessageBox.Show("예외처리 - " + ee.ToString());
+                }
+
+            }), System.Windows.Threading.DispatcherPriority.Background);
+
+
         }
 
         private void btiClose_Click(object sender, RoutedEventArgs e)
         {
-            DataStore.Instance.InsertLogByFormS(this.GetType().Name, stDate, stTime, "E");
             try
             {
+                DataStore.Instance.InsertLogByFormS(this.GetType().Name, stDate, stTime, "E");
                 lib.ChildMenuClose(this.ToString());
             }
             catch (Exception ee)
@@ -295,7 +291,7 @@ namespace WizMes_HanMin
         {
             try
             {
-                //if(dgdOut.Items.Count == 0 && dgdGonsu.Items.Count == 0)
+                //if(dgdQ.Items.Count == 0 && dgdP.Items.Count == 0)
                 //{
                 //    MessageBox.Show("먼저 검색해 주세요.");
                 //    return;
@@ -305,36 +301,36 @@ namespace WizMes_HanMin
                 string Name = string.Empty;
 
                 string[] lst = new string[4];
-                lst[0] = "KPI작업공수";
-                lst[1] = "KPI납기";
-                lst[2] = dgdGonsu.Name;
-                lst[3] = dgdOut.Name;
+                lst[0] = "생산성 향상";
+                lst[1] = "품질 향상";
+                lst[2] = dgdP.Name;
+                lst[3] = dgdQ.Name;
 
                 ExportExcelxaml ExpExc = new ExportExcelxaml(lst);
                 ExpExc.ShowDialog();
 
                 if (ExpExc.DialogResult.HasValue)
                 {
-                    if (ExpExc.choice.Equals(dgdGonsu.Name))
+                    DataStore.Instance.InsertLogByForm(this.GetType().Name, "E");
+                    if (ExpExc.choice.Equals(dgdP.Name))
                     {
-                        DataStore.Instance.InsertLogByForm(this.GetType().Name, "E");
                         if (ExpExc.Check.Equals("Y"))
-                            dt = Lib.Instance.DataGridToDTinHidden(dgdGonsu);
+                            dt = Lib.Instance.DataGridToDTinHidden(dgdP);
                         else
-                            dt = Lib.Instance.DataGirdToDataTable(dgdGonsu);
+                            dt = Lib.Instance.DataGirdToDataTable(dgdP);
 
-                        Name = dgdGonsu.Name;
+                        Name = dgdP.Name;
                         Lib.Instance.GenerateExcel(dt, Name);
                         Lib.Instance.excel.Visible = true;
                     }
-                    else if (ExpExc.choice.Equals(dgdOut.Name))
+                    else if (ExpExc.choice.Equals(dgdQ.Name))
                     {
                         if (ExpExc.Check.Equals("Y"))
-                            dt = Lib.Instance.DataGridToDTinHidden(dgdOut);
+                            dt = Lib.Instance.DataGridToDTinHidden(dgdQ);
                         else
-                            dt = Lib.Instance.DataGirdToDataTable(dgdOut);
+                            dt = Lib.Instance.DataGirdToDataTable(dgdQ);
 
-                        Name = dgdOut.Name;
+                        Name = dgdQ.Name;
                         Lib.Instance.GenerateExcel(dt, Name);
                         Lib.Instance.excel.Visible = true;
                     }
@@ -353,49 +349,49 @@ namespace WizMes_HanMin
             }
         }
 
-        private void lblArticleNo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void lblBuyerArticleNo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (chkArticleNo.IsChecked == true)
+            if (chkBuyerArticleNo.IsChecked == true)
             {
-                chkArticleNo.IsChecked = false;
+                chkBuyerArticleNo.IsChecked = false;
             }
             else
             {
-                chkArticleNo.IsChecked = true;
+                chkBuyerArticleNo.IsChecked = true;
             }
         }
         // 거래처 체크박스 이벤트
-        private void chkArticleNo_Checked(object sender, RoutedEventArgs e)
+        private void chkBuyerArticleNo_Checked(object sender, RoutedEventArgs e)
         {
-            chkArticleNo.IsChecked = true;
-            txtArticleNoSearch.IsEnabled = true;
-            btnArticleNoSearch.IsEnabled = true;
+            chkBuyerArticleNo.IsChecked = true;
+            txtBuyerArticleNoSearch.IsEnabled = true;
+            btnBuyerArticleNoSearch.IsEnabled = true;
         }
-        private void chkArticleNo_UnChecked(object sender, RoutedEventArgs e)
+        private void chkBuyerArticleNo_UnChecked(object sender, RoutedEventArgs e)
         {
-            chkArticleNo.IsChecked = false;
-            txtArticleNoSearch.IsEnabled = false;
-            btnArticleNoSearch.IsEnabled = false;
+            chkBuyerArticleNo.IsChecked = false;
+            txtBuyerArticleNoSearch.IsEnabled = false;
+            btnBuyerArticleNoSearch.IsEnabled = false;
         }
         // 거래처 텍스트박스 엔터 → 플러스파인더
-        private void txtArticleNoSearch_KeyDown(object sender, KeyEventArgs e)
+        private void txtBuyerArticleNoSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                MainWindow.pf.ReturnCode(txtArticleNoSearch, 76, "");
+                MainWindow.pf.ReturnCode(txtBuyerArticleNoSearch, 76, "");
             }
         }
         // 거래처 플러스파인더 이벤트
-        private void btnArticleNoSearch_Click(object sender, RoutedEventArgs e)
+        private void btnBuyerArticleNoSearch_Click(object sender, RoutedEventArgs e)
         {
             // 거래처 : 0
-            MainWindow.pf.ReturnCode(txtArticleNoSearch, 76, "");
+            MainWindow.pf.ReturnCode(txtBuyerArticleNoSearch, 76, "");
         }
 
         //품명 라벨 클릭
         private void LabelArticleSearch_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if(CheckBoxArticleSearch.IsChecked == true)
+            if (CheckBoxArticleSearch.IsChecked == true)
             {
                 CheckBoxArticleSearch.IsChecked = false;
             }
@@ -421,12 +417,12 @@ namespace WizMes_HanMin
         {
             try
             {
-                if(e.Key == Key.Enter)
+                if (e.Key == Key.Enter)
                 {
                     pf.ReturnCode(TextBoxArticleSearch, 77, TextBoxArticleSearch.Text);
                 }
             }
-            catch(Exception ee)
+            catch (Exception ee)
             {
                 MessageBox.Show("예외처리 - " + ee.ToString());
             }
@@ -444,25 +440,21 @@ namespace WizMes_HanMin
             }
         }
 
-        // 데이터피커 포맷으로 변경
-        private string DatePickerFormat(string str)
+        // 천마리 콤마, 소수점 버리기
+        private string stringFormatN0(object obj)
         {
-            string result = "";
-
-            if (str.Length == 8)
-            {
-                if (!str.Trim().Equals(""))
-                {
-                    result = str.Substring(0, 4) + "-" + str.Substring(4, 2) + "-" + str.Substring(6, 2);
-                }
-            }
-            else
-            {
-                result = "합     계";
-            }
-            return result;
+            return string.Format("{0:N0}", obj);
         }
-
+        // 천마리 콤마, 소수점 두자리
+        private string stringFormatN2(object obj)
+        {
+            return string.Format("{0:N2}", obj);
+        }
+        // 천마리 콤마, 소수점 한자리
+        private string stringFormatN1(object obj)
+        {
+            return string.Format("{0:N1}", obj);
+        }
     }
 
     #region CodeView
@@ -475,20 +467,32 @@ namespace WizMes_HanMin
 
         public int Num { get; set; }
 
-        public string KPIKey { get; set; }
-        public string MonthWorkHour { get; set; }
-        public string MonthWorkQty { get; set; }
-        public string MonthUPH { get; set; }
-        public string WorkQty { get; set; }
+        public string GbnName { get; set; }
+        public string ArticleNo { get; internal set; }
+        public string Article { get; internal set; }
+        public string WorkQty { get; internal set; }
+        public string WorkTime { get; internal set; }
+        public string WorkQtyPerHour { get; internal set; }
+        public string WorkUpRate { get; internal set; }
+        public string WorkGoalRate { get; internal set; }
+
+        public string WorkMan { get; set; }
+        public string Gonsu { get; set; }
+        public string OrderQty { get; set; }
+        public string DiffOutDate { get; set; }
+        public string DiffOutDayPerQty { get; set; }
+
         public string DefectQty { get; set; }
+        public string DefectWorkQty { get; set; }
         public string DefectRate { get; set; }
-        public string McSettingHour { get; set; }
-        public string MtrYongGiHour { get; set; }
-        public string PackingHour { get; set; }
-        public string WorkHour { get; set; }
-        public string WorkDate { get; set; }
-        public string WorkDate_CV { get; set; }
-        
+        public string DefectUpRate { get; set; }
+        public string DefectGoalRate { get; set; }
+        public string gbn { get; set; }
+        public string Sort { get; set; }
+
+        public bool Total_Color { get; set; }
+
+
     }
 
     #endregion

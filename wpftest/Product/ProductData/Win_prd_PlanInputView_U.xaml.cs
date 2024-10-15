@@ -609,6 +609,7 @@ namespace WizMes_HanMin
                             OutQty = stringFormatN0(dr["OutQty"]),
                             PatternID = dr["PatternID"].ToString(),
                             ArticleGrpID = dr["ArticleGrpID"].ToString(),
+                            ArticleGrp = dr["ArticleGrp"].ToString(),
 
                             BuyerModel = dr["BuyerModel"].ToString(),
                             BuyerModelID = dr["BuyerModelID"].ToString(),
@@ -2331,7 +2332,7 @@ namespace WizMes_HanMin
 
         public string OutwareExceptYN { get; set; }
         public string LotID { get; set; }
-        public string ArticleGrpName { get; set; }
+        public string ArticleGrp { get; set; }
         public string PlanTheEnd { get; set; }
 
         // 체크 되었는지 안되었는지

@@ -27,8 +27,8 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <Grid Grid.Column="1" Grid.Row="0" Visibility="Visible">
+
+            <Grid Grid.Column="1" Grid.Row="0" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="85*" />
@@ -46,7 +46,7 @@
                         </Viewbox>
                     </StackPanel>
                 </Label>
-                <DatePicker x:Name="DatePickerStartDateSearch" Grid.Column="1" IsEnabled="True"
+                <DatePicker x:Name="dtpSDate" Grid.Column="1" IsEnabled="True"
                             Style="{DynamicResource DatePickerSearch}" />
             </Grid>
 
@@ -55,67 +55,56 @@
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="85*" />
                 </Grid.ColumnDefinitions>
-                <DatePicker x:Name="DatePickerEndDateSearch" Grid.Column="1" IsEnabled="True"
+                <DatePicker x:Name="dtpEDate" Grid.Column="1" IsEnabled="True"
                             Style="{DynamicResource DatePickerSearch}" />
             </Grid>
 
-            <Grid Grid.Column="1" Grid.Row="2" Visibility="Hidden">
+
+            <Grid Grid.Column="1" Grid.Row="2" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="ButtonLastYear" Grid.Column="0" 
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                        Click="ButtonLastYear_Click">
-                    <TextBlock Text="전년" Margin="0" ></TextBlock>
-                </Button>
-                <Button x:Name="ButtonLastMonth" Grid.Column="1" 
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                        Click="ButtonLastMonth_Click">
-                    <TextBlock Text="전월" Margin="0"></TextBlock>
-                </Button>
-                <Button x:Name="ButtonThisYear" Grid.Column="2" 
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                        Click="ButtonThisYear_Click" >
-                    <TextBlock Text="금년" Margin="0" ></TextBlock>
-                </Button>
-                <Button x:Name="ButtonThisMonth" Grid.Column="3" 
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                        Click="ButtonThisMonth_Click">
-                    <TextBlock Text="금월" Margin="0" ></TextBlock>
-                </Button>
+                <Button x:Name="btnLastMonth" Grid.Column="0" Content="전월"
+                        Click="btnLastMonth_Click" />
+                <Button x:Name="btnYesterday" Grid.Column="1" Content="전일"
+                        Click="btnYesterday_Click" />
+                <Button x:Name="btnThisMonth" Grid.Column="2" Content="금월" 
+                            Click="btnThisMonth_Click" />
+                <Button x:Name="btnToday" Grid.Column="3" Content="금일" 
+                            Click="btnToday_Click" />
             </Grid>
-            
+
             <Grid Grid.Column="2" Grid.Row="0" Visibility="Visible">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="90*" />
                     <ColumnDefinition Width="15*" />
                 </Grid.ColumnDefinitions>
-                <Label x:Name="lblArticleNo" Grid.Column="0" 
+                <Label x:Name="lblBuyerArticleNo" Grid.Column="0" 
                        Style="{DynamicResource LabelSearch}"
-                       MouseLeftButtonUp="lblArticleNo_MouseLeftButtonUp">
+                       MouseLeftButtonUp="lblBuyerArticleNo_MouseLeftButtonUp">
                     <StackPanel Style="{DynamicResource StackPanelInLabel}">
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
-                            <CheckBox x:Name="chkArticleNo" Checked="chkArticleNo_Checked" Unchecked="chkArticleNo_UnChecked" VerticalAlignment="Center" />
+                            <CheckBox x:Name="chkBuyerArticleNo" Checked="chkBuyerArticleNo_Checked" Unchecked="chkBuyerArticleNo_UnChecked" VerticalAlignment="Center" />
                         </Viewbox>
                         <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
                             <TextBlock Text="품    번" Style="{DynamicResource TextBlockInViewBoxSearch}"/>
                         </Viewbox>
                     </StackPanel>
                 </Label>
-                <TextBox x:Name="txtArticleNoSearch" Grid.Column="1" 
+                <TextBox x:Name="txtBuyerArticleNoSearch" Grid.Column="1" 
                          Style="{DynamicResource TextBoxSearch}" IsEnabled="False" 
-                         KeyDown="txtArticleNoSearch_KeyDown" />
-                <Button x:Name="btnArticleNoSearch" Grid.Column="2" IsEnabled="False" 
-                        Click="btnArticleNoSearch_Click"  >
+                         KeyDown="txtBuyerArticleNoSearch_KeyDown" />
+                <Button x:Name="btnBuyerArticleNoSearch" Grid.Column="2" IsEnabled="False" 
+                        Click="btnBuyerArticleNoSearch_Click"  >
                     <Image Source="{DynamicResource btiPlusFind}" Style="{DynamicResource imgPlusFind}" />
                 </Button>
             </Grid>
 
-            <Grid Grid.Column="2" Grid.Row="0" Visibility="Hidden" >
+            <Grid Grid.Column="2" Grid.Row="1" Visibility="Visible" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75*" />
                     <ColumnDefinition Width="90*" />
@@ -145,7 +134,7 @@
                 </Button>
 
             </Grid>
-            
+
             <Grid Grid.Column="4" Grid.RowSpan="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -192,67 +181,82 @@
         </Grid>
 
         <Grid Grid.Row="1" >
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*" />
-                <RowDefinition Height="2*" />
-                <!--<RowDefinition Height="10*" />-->
+                <RowDefinition Height="10*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <DataGrid x:Name="dgdGonsu" Grid.Row="0" 
-                      Style="{DynamicResource DataGridSet1}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="KPIKey" Width="0" MinWidth="0" Binding="{Binding KPIKey}" FontSize="20" FontWeight="Bold"/>
-                    <DataGridTextColumn Header="작업일" Width="auto" MinWidth="150" 
-                                        Binding="{Binding WorkDate}"
-                                        ElementStyle="{StaticResource DataGridCellCenter}" FontSize="20" FontWeight="Bold"/>
+            <GroupBox Header="[생산성 향상]" Grid.Row="0">
+                <DataGrid x:Name="dgdP" IsReadOnly="True" Style="{DynamicResource DataGridSet1}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=Total_Color}" Value="true">
+                                    <Setter Property="Background" Value="#D8D8D8" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="기간" Width="*" MinWidth="150" Binding="{Binding GbnName}" 
+                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20"  />
+                        <DataGridTextColumn Header="품번" Width="*" MinWidth="150" Binding="{Binding ArticleNo}" 
+                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20" />
+                        <DataGridTextColumn Header="품명" Width="*" MinWidth="150" Binding="{Binding Article}" 
+                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20" />
+                        <DataGridTextColumn Header="생산수량(EA)" Width="*" MinWidth="150" Binding="{Binding WorkQty, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="소요시간(Hr)" MinWidth="150" Width="*" Binding="{Binding WorkTime, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="시간당생산량(EA/Hr)" MinWidth="150" Width="*" Binding="{Binding WorkQtyPerHour, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="목표달성율(%)"  Width="*" Binding="{Binding WorkGoalRate, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="개선율(%)"  Width="*" Binding="{Binding WorkUpRate, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
 
-                    <DataGridTextColumn Header="작업시간" Width="auto" MinWidth="150" 
-                                        Binding="{Binding MonthWorkHour}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" FontWeight="Bold"/>
-                    <DataGridTextColumn Header="생산수량" Width="auto" MinWidth="150" 
-                                        Binding="{Binding MonthWorkQty}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" FontWeight="Bold"/>
-                    <DataGridTextColumn Header="시간당생산량" MinWidth="150" Width="auto" 
-                                        Binding="{Binding MonthUPH}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" FontWeight="Bold"/>
-                </DataGrid.Columns>
-            </DataGrid>
-            
-            <DataGrid x:Name="dgdQ" Grid.Row="1" 
-                      Style="{DynamicResource DataGridSet1}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="작업수량" Width="auto" MinWidth="150" FontSize="20" FontWeight="Bold"
-                                        Binding="{Binding WorkQty}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" />
-                    <DataGridTextColumn Header="불량수량" Width="auto" MinWidth="150" FontSize="20" FontWeight="Bold"
-                                        Binding="{Binding DefectQty}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" />
-                    <DataGridTextColumn Header="불량률" Width="auto" MinWidth="150" FontSize="20" FontWeight="Bold"
-                                        Binding="{Binding DefectRate}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" />
-                </DataGrid.Columns>
-                
-            </DataGrid>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
 
-            <DataGrid x:Name="dgdOut" Grid.Row="2"  Visibility="Hidden"
-                      Style="{DynamicResource DataGridSet1}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="설비세팅시간" Width="auto" MinWidth="150" 
-                                        Binding="{Binding McSettingHour}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" FontWeight="Bold" />
-                    <DataGridTextColumn Header="용기준비시간" Width="auto" MinWidth="150" 
-                                        Binding="{Binding MtrYongGiHour}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" FontWeight="Bold" />
-                    <DataGridTextColumn Header="작업시간" Width="auto" MinWidth="150" 
-                                        Binding="{Binding MonthWorkHour}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" FontWeight="Bold" />
-                    <DataGridTextColumn Header="포장시간" Width="auto" MinWidth="150" 
-                                        Binding="{Binding PackingHour}"
-                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" FontWeight="Bold" />
-                    
-                </DataGrid.Columns>
-            </DataGrid>
+            <GridSplitter Grid.Row="1" 
+              HorizontalAlignment="Stretch" 
+              VerticalAlignment="Top"
+              ResizeDirection="Rows"
+              Height="2"
+             />
+
+            <GroupBox Header="[완제품 불량률 감소]" Grid.Row="1" >
+                <DataGrid x:Name="dgdQ" IsReadOnly="True" Style="{DynamicResource DataGridSet1}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=Total_Color}" Value="true">
+                                    <Setter Property="Background" Value="#D8D8D8" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="기간" Width="*" MinWidth="150" Binding="{Binding GbnName}" 
+                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20"  />
+                        <DataGridTextColumn Header="품번" Width="*" MinWidth="150" Binding="{Binding ArticleNo}" 
+                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20"  />
+                        <DataGridTextColumn Header="품명" Width="*" MinWidth="150" Binding="{Binding Article}" 
+                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20" />
+                        <DataGridTextColumn Header="검사수량(EA)" Width="*" MinWidth="150" Binding="{Binding DefectWorkQty, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="불량수량(EA)" Width="*" MinWidth="150" Binding="{Binding DefectQty, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="불량률(PPM)" Width="*" MinWidth="150" Binding="{Binding DefectRate}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="목표달성율(%)"  Width="*" Binding="{Binding DefectGoalRate, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="개선율(%)"  Width="*" Binding="{Binding DefectUpRate, StringFormat='#,##0'}" 
+                                        ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
 
         </Grid>
 
