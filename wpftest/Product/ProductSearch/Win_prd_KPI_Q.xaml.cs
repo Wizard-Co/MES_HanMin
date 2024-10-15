@@ -196,26 +196,24 @@ namespace WizMes_HanMin
                             {
                                 Num = i + 1,
 
-                                GbnName = dr["GbnName"].ToString(),
+                                WorkDate = DatePickerFormat(dr["WorkDate"].ToString()),
                                 ArticleNo = dr["ARTICLENO"].ToString(),
                                 Article = dr["article"].ToString(),
                                 WorkQty = stringFormatN0(dr["WorkQty"]),
-                                WorkTime = stringFormatN0(dr["WorkTime"]),
+                                WorkTime = stringFormatN1(dr["WorkTime"]),
                                 WorkQtyPerHour = stringFormatN0(dr["WorkQtyPerHour"]),
-                                WorkUpRate = stringFormatN0(dr["WorkUpRate"]),
-                                WorkGoalRate = stringFormatN0(dr["WorkGoalRate"]),
+                                WorkUpRate = stringFormatN1(dr["WorkUpRate"]),
+                                WorkGoalRate = stringFormatN1(dr["WorkGoalRate"]),
                                 DefectQty = stringFormatN0(dr["DefectQty"]),
                                 DefectWorkQty = stringFormatN0(dr["DefectWorkQty"]),
-                                DefectRate = stringFormatN0(dr["DefectRate"]),
-                                DefectUpRate = stringFormatN0(dr["DefectUpRate"]),
-                                DefectGoalRate = stringFormatN0(dr["DefectGoalRate"]),
+                                DefectRate = stringFormatN1(dr["DefectRate"]),
+                                DefectUpRate = stringFormatN1(dr["DefectUpRate"]),
+                                DefectGoalRate = stringFormatN1(dr["DefectGoalRate"]),
                                 gbn = dr["gbn"].ToString(),
                                 Sort = dr["Sort"].ToString(),
+                                Daily_WorkQty = stringFormatN0(dr["Daily_WorkQty"])
                             };
-                            if (WPKQC.Sort == "Z")
-                            {
-                                WPKQC.Total_Color = true;
-                            }
+
                             if (WPKQC.gbn == "Q")
                             {
                                 dgdQ.Items.Add(WPKQC);
@@ -455,6 +453,20 @@ namespace WizMes_HanMin
         {
             return string.Format("{0:N1}", obj);
         }
+        private string DatePickerFormat(string str)
+        {
+            string result = "";
+
+            if (str.Length == 8)
+            {
+                if (!str.Trim().Equals(""))
+                {
+                    result = str.Substring(0, 4) + "-" + str.Substring(4, 2) + "-" + str.Substring(6, 2);
+                }
+            }
+
+            return result;
+        }
     }
 
     #region CodeView
@@ -467,7 +479,7 @@ namespace WizMes_HanMin
 
         public int Num { get; set; }
 
-        public string GbnName { get; set; }
+        public string WorkDate { get; set; }
         public string ArticleNo { get; internal set; }
         public string Article { get; internal set; }
         public string WorkQty { get; internal set; }
@@ -475,12 +487,9 @@ namespace WizMes_HanMin
         public string WorkQtyPerHour { get; internal set; }
         public string WorkUpRate { get; internal set; }
         public string WorkGoalRate { get; internal set; }
+        public string Daily_WorkQty { get; internal set; }
 
-        public string WorkMan { get; set; }
-        public string Gonsu { get; set; }
-        public string OrderQty { get; set; }
-        public string DiffOutDate { get; set; }
-        public string DiffOutDayPerQty { get; set; }
+       
 
         public string DefectQty { get; set; }
         public string DefectWorkQty { get; set; }
@@ -489,9 +498,6 @@ namespace WizMes_HanMin
         public string DefectGoalRate { get; set; }
         public string gbn { get; set; }
         public string Sort { get; set; }
-
-        public bool Total_Color { get; set; }
-
 
     }
 

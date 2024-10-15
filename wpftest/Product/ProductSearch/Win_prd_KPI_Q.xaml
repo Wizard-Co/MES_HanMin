@@ -198,21 +198,23 @@
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="기간" Width="*" MinWidth="150" Binding="{Binding GbnName}" 
-                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20"  />
-                        <DataGridTextColumn Header="품번" Width="*" MinWidth="150" Binding="{Binding ArticleNo}" 
+                        <DataGridTextColumn Header="날짜" Width="*" MinWidth="150" Binding="{Binding WorkDate}" 
+                                        ElementStyle="{StaticResource DataGridCellCenter}" FontSize="20"  />
+                        <DataGridTextColumn Header="품번" Width="*" MinWidth="150" Binding="{Binding ArticleNo}" Visibility="Hidden"
                                         ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20" />
-                        <DataGridTextColumn Header="품명" Width="*" MinWidth="150" Binding="{Binding Article}" 
+                        <DataGridTextColumn Header="품명" Width="*" MinWidth="150" Binding="{Binding Article}" Visibility="Hidden"
                                         ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20" />
                         <DataGridTextColumn Header="생산수량(EA)" Width="*" MinWidth="150" Binding="{Binding WorkQty, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
                         <DataGridTextColumn Header="소요시간(Hr)" MinWidth="150" Width="*" Binding="{Binding WorkTime, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
+                        <DataGridTextColumn Header="일 생산량(EA)" MinWidth="150" Width="*" Binding="{Binding Daily_WorkQty, StringFormat='#,##0'}" 
+                 ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
                         <DataGridTextColumn Header="시간당생산량(EA/Hr)" MinWidth="150" Width="*" Binding="{Binding WorkQtyPerHour, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
                         <DataGridTextColumn Header="목표달성율(%)"  Width="*" Binding="{Binding WorkGoalRate, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
-                        <DataGridTextColumn Header="개선율(%)"  Width="*" Binding="{Binding WorkUpRate, StringFormat='#,##0'}" 
+                        <DataGridTextColumn Header="향상률(%)"  Width="*" Binding="{Binding WorkUpRate, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
 
                     </DataGrid.Columns>
@@ -238,11 +240,11 @@
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="기간" Width="*" MinWidth="150" Binding="{Binding GbnName}" 
+                        <DataGridTextColumn Header="날짜" Width="*" MinWidth="150" Binding="{Binding WorkDate}" 
+                                        ElementStyle="{StaticResource DataGridCellCenter}" FontSize="20"  />
+                        <DataGridTextColumn Header="품번" Width="*" MinWidth="150" Binding="{Binding ArticleNo}" Visibility="Hidden"
                                         ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20"  />
-                        <DataGridTextColumn Header="품번" Width="*" MinWidth="150" Binding="{Binding ArticleNo}" 
-                                        ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20"  />
-                        <DataGridTextColumn Header="품명" Width="*" MinWidth="150" Binding="{Binding Article}" 
+                        <DataGridTextColumn Header="품명" Width="*" MinWidth="150" Binding="{Binding Article}" Visibility="Hidden"
                                         ElementStyle="{StaticResource DataGridCellLeft}" FontSize="20" />
                         <DataGridTextColumn Header="검사수량(EA)" Width="*" MinWidth="150" Binding="{Binding DefectWorkQty, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
@@ -252,7 +254,7 @@
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
                         <DataGridTextColumn Header="목표달성율(%)"  Width="*" Binding="{Binding DefectGoalRate, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
-                        <DataGridTextColumn Header="개선율(%)"  Width="*" Binding="{Binding DefectUpRate, StringFormat='#,##0'}" 
+                        <DataGridTextColumn Header="향상률(%)"  Width="*" Binding="{Binding DefectUpRate, StringFormat='#,##0'}" 
                                         ElementStyle="{StaticResource DataGridCellRight}" FontSize="20" />
                     </DataGrid.Columns>
                 </DataGrid>
