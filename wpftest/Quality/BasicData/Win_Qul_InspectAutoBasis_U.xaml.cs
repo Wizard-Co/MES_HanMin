@@ -1526,6 +1526,7 @@ namespace WizMes_HanMin
             else if (dtpMoldNo.SelectedDate == null)
             {
                 MessageBox.Show("기준일자를 등록해주세요.");
+                dtpMoldNo.IsDropDownOpen = true;
                 flag = false;
                 return flag;
             }

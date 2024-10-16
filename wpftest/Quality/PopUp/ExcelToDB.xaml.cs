@@ -214,8 +214,8 @@ namespace WizMes_HanMin.Quality.PopUp
                 }
                 else
                 {
-                    MessageBox.Show("오류 :" + result[1]);
-                    flag = false;
+                    MessageBox.Show("오류 : 검사기준 자동등록 중 오류가 발생하였습니다.\n" + result[1]);
+                    flag = false;               
                 }
 
                 //mt_InspectAutoBasisSub등록
@@ -291,10 +291,9 @@ namespace WizMes_HanMin.Quality.PopUp
                 }
                 else
                 {
-                    MessageBox.Show("오류 발생 : " + e.ToString());              
+                    MessageBox.Show("오류 : 검사기준 세부항목 등록 중 오류가 발생하였습니다.\n " + e.ToString());              
                 }
-                flag = false;
-                _err = false;
+                flag = false;            
             }
             finally
             {
@@ -302,6 +301,7 @@ namespace WizMes_HanMin.Quality.PopUp
                 if (flag == false)
                 {
                     DeleteRecentInsBasis(); //검사기준 등록한 것 바로 삭제
+                    _err = false;
                 }
             }
 
@@ -327,7 +327,7 @@ namespace WizMes_HanMin.Quality.PopUp
                 }
                 else
                 {
-                    MessageBox.Show("오류 SetDefectYN():" + result[1]);
+                    MessageBox.Show("오류 SetDefectYN(): 업로드 후 불량 수량 계산 중 오류가 발생하였습니다.\n" + result[1]);
                 }
             }
             catch (Exception e)
@@ -503,6 +503,7 @@ namespace WizMes_HanMin.Quality.PopUp
                 {
                     MessageBox.Show("오류 :" + result[1]);
                     flag = false;
+                    _err = false;
                 }
 
                 if (flag == true)
@@ -568,6 +569,7 @@ namespace WizMes_HanMin.Quality.PopUp
                         {
                             MessageBox.Show("오류 :" + result[1]);
                             flag = false;
+                            _err = false;
                         }
                     }
                 }
@@ -591,8 +593,8 @@ namespace WizMes_HanMin.Quality.PopUp
         //★     ★ ★★★★   ★        ★    ★  ★    ★  ★★★★
         //★     ★ ★         ★        ★    ★  ★    ★  ★     
         // ★★★   ★         ★★★★   ★★★   ★★★    ★★★★
-        
 
+        //btnUploadToDB_Click()
         //업로드 클릭 시
         //검색한 품번이 있어야 버튼 활성화 됨
         private void btnUploadToDB_Click(object sender, RoutedEventArgs e)

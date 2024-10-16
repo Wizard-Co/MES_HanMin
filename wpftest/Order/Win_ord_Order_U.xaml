@@ -608,7 +608,7 @@
                                         SelectedDate="{Binding AcptDate_CV}" KeyUp="DtpAcptDate_KeyDown" KeyDown="DtpAcptDate_KeyDown"  CalendarClosed="DtpAcptDate_CalendarClosed"
                                       />
 
-                            <Label Grid.Row="9" Grid.Column="0"  Style="{DynamicResource LabelInputArea}">
+                            <Label Grid.Row="9" x:Name="lblDvlyDate" Grid.Column="0"  Style="{DynamicResource LabelInputArea}" MouseLeftButtonDown="lblDvlyDate_MouseLeftButtonDown">
                                 <StackPanel Orientation="Horizontal" >
                                     <Viewbox Style="{DynamicResource ViewBoxSetMaxMinHeight}">
                                         <CheckBox x:Name="chkDvlyDate" Checked="chkDvlyDate_Checked" Unchecked="chkDvlyDate_Unchecked" PreviewKeyDown="ChkDvlyDate_PreviewKeyDown"/>
@@ -778,8 +778,8 @@
                             </Button>
 
                             <TextBlock Grid.Row="19" Grid.Column="0" HorizontalAlignment="Center"
-                                       VerticalAlignment="Stretch"  Text="[ 검  사 ]" />
-                            <Grid Grid.Row="19" Grid.Column="1" Grid.ColumnSpan="2">
+                                       VerticalAlignment="Stretch"  Text="[ 검  사 ]" Visibility="Hidden" />
+                            <Grid Grid.Row="19" Grid.Column="1" Grid.ColumnSpan="2" Visibility="Hidden">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="90*" />
                                     <ColumnDefinition Width="45*" />

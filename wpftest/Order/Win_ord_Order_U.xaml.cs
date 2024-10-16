@@ -2008,14 +2008,14 @@ namespace WizMes_HanMin
         {
             try
             {
-                if (txtCustom != null && txtCustom.Text != "")
-                {   //선택된 납품거래처에 따른 품명만 보여주게
-                    MainWindow.pf.ReturnCodeHanMin(txtArticle, 80, txtCustom.Tag.ToString().Trim());
-                }
-                else
-                {   //선택된 납품거래처가 없다면 전체 품명 다 보여주게
-                    MainWindow.pf.ReturnCodeHanMin(txtArticle, 80, "");
-                }
+                //if (txtCustom != null && txtCustom.Text != "")
+                //{   //선택된 납품거래처에 따른 품명만 보여주게
+                //    MainWindow.pf.ReturnCodeHanMin(txtArticle, 81, txtCustom.Tag.ToString().Trim());
+                //}
+                //else
+                //{   //선택된 납품거래처가 없다면 전체 품명 다 보여주게
+                    MainWindow.pf.ReturnCodeHanMin(txtArticle, 81, "");
+                //}
 
                 if (txtArticle.Tag != null)
                 {
@@ -2739,6 +2739,20 @@ namespace WizMes_HanMin
             {
                 MessageBox.Show("종료일자는 시작일 이후로 설정해주세요");
                 dtpEDate.SelectedDate = Convert.ToDateTime(e.RemovedItems[0].ToString());
+            }
+        }
+
+        private void lblDvlyDate_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(chkDvlyDate.IsChecked == true)
+            {
+                chkDvlyDate.IsChecked = false;
+                dtpDvlyDate.IsEnabled = false;
+            }
+            else
+            {
+                chkDvlyDate.IsChecked = true;
+                dtpDvlyDate.IsEnabled = true;
             }
         }
     }
