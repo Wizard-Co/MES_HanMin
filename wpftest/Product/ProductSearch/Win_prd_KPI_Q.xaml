@@ -186,7 +186,7 @@
                 <RowDefinition Height="10*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <GroupBox Header="[생산성 향상]" Grid.Row="0">
+            <GroupBox Header="[생산량 증가]" Grid.Row="0">
                 <DataGrid x:Name="dgdP" IsReadOnly="True" Style="{DynamicResource DataGridSet1}">
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
@@ -228,7 +228,7 @@
               Height="2"
              />
 
-            <GroupBox Header="[완제품 불량률 감소]" Grid.Row="1" >
+            <GroupBox Header="[공정불량 감소]" Grid.Row="1" >
                 <DataGrid x:Name="dgdQ" IsReadOnly="True" Style="{DynamicResource DataGridSet1}">
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
