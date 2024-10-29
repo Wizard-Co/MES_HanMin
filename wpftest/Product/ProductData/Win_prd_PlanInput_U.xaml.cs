@@ -698,11 +698,11 @@ namespace WizMes_HanMin
         {
             
             var WinPlan = dgdMain.SelectedItem as Win_prd_PlanInput_U_CodeView;
-            double notOrderInstQty = WinPlan.notOrderInstQty;
-            double planQty = txtQty.Text == string.Empty ? 0 : Convert.ToDouble(txtQty.Text);
-
             if (WinPlan != null)
             {
+                double notOrderInstQty = WinPlan.notOrderInstQty;
+                double planQty = txtQty.Text == string.Empty ? 0 : Convert.ToDouble(txtQty.Text);
+
                 if(planQty > notOrderInstQty)
                 {
                     if (MessageBox.Show("지시 수량이 수주량을 초과하였습니다. 계속하시겠습니까?", "추가 전 확인", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
